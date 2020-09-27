@@ -19,12 +19,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { ViewFormComponent } from '../form/view-form/view-form.component';
+// import { ViewFormComponent } from '../form/view-form/view-form.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { CdkScrollableModule, ScrollingModule } from '@angular/cdk/scrolling';
 import { environment } from 'src/environments/environment';
 import { AddFormComponent } from '../form/add-form/add-form.component';
-import { EditFormComponent } from '../form/edit-form/edit-form.component';
+// import { EditFormComponent } from '../form/edit-form/edit-form.component';
 import { MaterialModule } from '../material/material.module';
 describe('FormService', () => {
   let service: FormService;
@@ -32,8 +32,7 @@ describe('FormService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        LoginAdminComponent,
-        ViewFormComponent, LoadingSpinnerComponent, AddFormComponent, EditFormComponent
+        LoginAdminComponent, LoadingSpinnerComponent, AddFormComponent
       ],
       imports: [
         AngularFireModule.initializeApp(environment.firebaseApp),
