@@ -1,0 +1,108 @@
+<div class="container">
+
+  <section style="margin: 20px 10px 10px 10px;">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="32px" fxLayoutAlign="flex-start">
+      <ng-container class="cardList" *ngFor="let Content of formContent | async">
+        <div *ngIf="formId === Content.data.formID">
+          <mat-card class="mat-card" fxFlex="0 1 calc(25% - 32px)" fxFlex.lt-md="0 1 calc(50% - 32px)"
+            fxFlex.lt-sm="100%">
+            <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px">
+              <!-- <div *ngIf="Content.id === Content.data.formID+'_'+Content.data.creator">
+              Content : {{Content.data | json}}
+            </div> -->
+              <div *ngFor="let item of temPlate">
+                <!-- Item : {{item | json}} -->
+                <!-- ITEM : {{Content.data[item.label]}} -->
+                <div *ngIf="item.type === 'text'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'email'">
+                email: {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'phone'">
+                phone: {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'number'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'date'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'datetime-local'">
+                Date:
+                {{ (Content.data[item.label]?Content.data[item.label]:this.ngOnInit()).toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+              </div>
+
+              <div *ngIf="item.type === 'time'">
+                Time :{{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'duration'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'textarea'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'paragraph'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'checkbox'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'radio'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'autocomplete'">
+                {{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'file'">
+                <img class="alligator-turtle" mat-card-image src="{{Content.data[item.label]}}" alt="image" border="0">
+              </div>
+
+              <div *ngIf="item.type === 'shortenURL'">
+                ShortenURL:{{Content.data[item.label]}}
+              </div>
+
+              <div *ngIf="item.type === 'meta_tag'">
+                MetaTag: 
+                <div *ngFor="let meta of item.children">
+                  <div *ngIf=" meta['attribute'] === 'charset' || meta['attribute'] === 'prefix' ; else elseBox ">
+                    {{meta['attribute']}} : {{Content.data[meta['attribute']]}}
+                  </div>
+                  <ng-template #elseBox>
+                    {{meta['value']}} : {{Content.data[meta['value']]}}
+                  </ng-template>
+                </div>
+              </div>
+
+              <div *ngIf="item.type === 'display_form_name'">
+                DisPlayName:{{Content.data[item.label]}}
+              </div>
+
+              </div>
+
+              <button mat-raised-button (click)="openDialog(Content.id)">ดูข้อมูลเพิ่มเติม</button>
+            </div>
+          </mat-card>
+        </div>
+      </ng-container>
+    </div>
+
+  </section>
+
+  <!-- <button class="extended-fab-button" mat-fab color="primary" [routerLink]="['/createContent']">
+    <mat-icon>assignment</mat-icon>
+    <span class="extended-fab-button__text">Create Content</span>
+  </button> -->
+</div>

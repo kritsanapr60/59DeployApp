@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "incubate-internship-2020"
+  },
+  "targets": {
+    "incubate-internship-2020": {
+      "hosting": {
+        "myApp": [
+          "incubate-internship-2020"
+        ]
+      }
+    }
+  }
+}

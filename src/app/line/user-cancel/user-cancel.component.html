@@ -1,0 +1,149 @@
+<div class="flex-container">
+
+  <div class="header">
+    <h1 class="vertical-center">ขอยกเลิกการให้ข้อมูล</h1>
+  </div>
+
+  <div class="option">
+    <mat-form-field appearance="fill">
+      <mat-label>เลือกคำขอการยกเลิก</mat-label>
+      <mat-select [(ngModel)]="valueSelector" required>
+        <mat-option *ngFor="let cancel of cancels" [value]="cancel.value">
+          {{cancel.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="button">
+    <button class="button" mat-raised-button color="primary" (click)="sendCancel()">
+      <mat-icon>send</mat-icon>
+      ส่งคำขอยกเลิกการให้ข้อมูล
+    </button>
+  </div>
+
+  <div class="button">
+    <button class="button" mat-raised-button color="primary" (click)="Show()">
+      <mat-icon>history</mat-icon> 
+      ประวัติคำขอ
+    </button>
+  </div>
+
+  <div class="content">
+    <div *ngFor="let item of Data$  | async">
+      <div *ngIf="item.Status==='pending'">
+        <mat-card>
+          <b>รายการยกเลิก :</b> {{ item.Request }}
+          <br>
+          <b>ชื่อ :</b> {{ item.Name }}
+          <br>
+          <b>วันที่ขอ: </b>{{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+          <br>
+          <b>เวลา :</b> {{ item.Time.toDate() | date:'h:mm:ss a' }}
+          <br>
+          <p class="status pending">สถานะ : อยู่ระหว่างดำเนินการ</p>
+        </mat-card>
+      </div>
+      <div *ngIf="item.Status==='reject'">
+        <mat-card>
+          <b>รายการยกเลิก :</b> {{ item.Request }}
+          <br>
+          <b>ชื่อ :</b> {{ item.Name }}
+          <br>
+          <b>วันที่ขอ:</b> {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+          &nbsp;
+          <b>เวลา :</b> {{ item.Time.toDate() | date:'h:mm:ss a' }}
+          <br>
+          <p class="status reject">สถานะ : เนินการล้มเหลว</p>
+          <hr>
+          <p><b>ผู้ดูเเลระบบที่ทำรายการ :</b> {{ item.NameAdmin }}</p>
+          <b><u> หมายเหตุ : </u></b><p [innerHTML]='item.message'></p>
+          <p>
+            <b>วันที่ดำเนินการ : </b>{{ item.TimeAdmin.toDate() | date:'dd/MM/yyyy' }}   
+            &nbsp;
+            <b>เวลา : </b> {{ item.TimeAdmin.toDate() | date:'h:mm:ss a' }}
+          </p>
+        </mat-card>
+      </div>
+
+      <div *ngIf="item.Status==='accept'">
+        <mat-card>
+          <b>รายการยกเลิก :</b> {{ item.Request }}
+          <br>
+          <b>ชื่อ :</b> {{ item.Name }}
+          <br>
+          <b>วันที่ขอ: </b>{{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+          <br>
+          <b>เวลา :</b> {{ item.Time.toDate() | date:'h:mm:ss a' }}
+          <br>
+          <p class="status accept">สถานะ : ดำเนินการเสร็จสิ้น</p>
+          <hr>
+          <p><b>ผู้ดูเเลระบบที่ทำรายการ :</b> {{ item.NameAdmin }}</p>
+          <b><u> หมายเหตุ : </u></b><p [innerHTML]='item.message'></p>
+          <p>
+            <b>วันที่ดำเนินการ : </b>{{ item.TimeAdmin.toDate() | date:'dd/MM/yyyy' }}   
+            &nbsp;
+            <b>เวลา : </b> {{ item.TimeAdmin.toDate() | date:'h:mm:ss a' }}
+          </p>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- <div fxLayout="column" fxLayoutAlign="space-around center">
+<div fxLayout="row" fxLayoutAlign="start start">
+  <h1 class="left block">ขอยกเลิกการให้ข้อมูล</h1>
+</div>
+</div>
+
+<div fxLayout="column" fxLayoutAlign="space-around start">
+<div class="box">
+<div fxLayout="row" fxLayoutAlign="start start">
+  <section class="box">
+    <mat-form-field appearance="fill" >
+      <mat-label>เลือกคำขอการยกเลิก</mat-label>
+      <mat-select [(ngModel)]="valueSelector" required>
+        <mat-option *ngFor="let cancel of cancels" [value]="cancel.value">
+          {{cancel.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+  <button class="button" mat-raised-button color="primary" (click)="sendCancel()">ส่งคำขอยกเลิกการให้ข้อมูล</button>
+  &nbsp;
+  <button mat-raised-button color="primary" (click)="Show()">ประวัติคำขอ</button>
+</div>
+</div>
+</div>
+
+<div *ngFor="let item of allRequest | async">
+<div *ngIf="item.Status==='pending'">
+  {{ item.Request }}
+  วันที่ขอ: {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+  <br>
+  เวลา : {{ item.Time.toDate() | date:'h:mm:ss a' }}
+  <br>
+  <p class="status pending">สถานะ : อยู่ระหว่างดำเนินการ</p>
+</div>
+<div *ngIf="item.Status==='reject'">
+  วันที่ขอ: {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+  <br>
+  เวลา : {{ item.Time.toDate() | date:'h:mm:ss a' }}
+  <br>
+  <p class="status reject">สถานะ : เนินการล้มเหลว</p>
+</div>
+<div *ngIf="item.Status==='accept'">
+  วันที่ขอ: {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+  <br>
+  เวลา : {{ item.Time.toDate() | date:'h:mm:ss a' }}
+  <br>
+  <p class="status accept">สถานะ : ดำเนินการเสร็จสิ้น</p>
+</div>
+</div>
+
+-->

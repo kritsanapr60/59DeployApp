@@ -1,0 +1,89 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "FillOutForm",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "formID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Date",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "FillOutForm",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "formID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Date",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "FillOutForm",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "formID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "editDate",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "FillOutForm",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "formID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "editDate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "FillOutForm",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "formID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "titleForm",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "FillOutForm",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "formID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "titleForm",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

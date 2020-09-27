@@ -1,0 +1,24 @@
+  <div class="pad">
+
+    <div fxLayout="column" fxLayoutAlign="center center" >
+      <h1><b>Admin Login</b></h1>
+      <br>
+      <div *ngIf="auth.user$ | async as user ; else login">
+        <div *ngIf="auth.admin$ | async as admin ; else  noPermission">
+        </div>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" >
+        <ng-template #login>
+          <button mat-button style="padding: 1rem;" (click)="auth.googleSignin()">
+            <mat-icon style="width: 50px; height:30px" svgIcon="logo"></mat-icon> 
+            Login With Google
+          </button>
+        </ng-template>
+        <ng-template #noPermission>
+          <div>คุณไม่มีสิทธิ์</div>
+          <hr>
+          <button mat-button class="button" (click)="auth.signOut()">Sign Out</button>
+        </ng-template>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,54 @@
+<button mat-icon-button color="primary" class="top-node" (click)="addNode('carousel')" *ngIf="isTop">Add Main Node</button>
+<!-- <i class="material-icons add-btn" *ngIf="!isTop" (click)="openDialog()"> add </i> -->
+<!-- carousel -->
+<div *ngIf="!isTop">
+  <button class="button-add" mat-icon-button *ngIf="currentNode.Name === 'carousel'" [matMenuTriggerFor]="carousel">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #carousel="matMenu">
+    <button mat-menu-item (click)="addNode('bubble')">bubble</button>
+  </mat-menu>
+  <!-- header -->
+  <button mat-icon-button *ngIf="currentNode.Name === 'header' && currentNode.Children.length == 0" [matMenuTriggerFor]="header">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #header="matMenu">
+    <button mat-menu-item (click)="addNode('box')">box</button>
+  </mat-menu>
+  <!-- hero -->
+  <button mat-icon-button *ngIf="currentNode.Name === 'hero' && currentNode.Children.length == 0" [matMenuTriggerFor]="hero">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #hero="matMenu">
+    <button mat-menu-item (click)="addNode('box')">box</button>
+    <button mat-menu-item (click)="addNode('image')">image</button>
+  </mat-menu>
+  <!-- body -->
+  <button mat-icon-button *ngIf="currentNode.Name === 'body' && currentNode.Children.length == 0" [matMenuTriggerFor]="body">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #body="matMenu">
+    <button mat-menu-item (click)="addNode('box')">box</button>
+  </mat-menu>
+  <!-- footer -->
+  <button mat-icon-button *ngIf="currentNode.Name === 'footer' && currentNode.Children.length == 0" [matMenuTriggerFor]="footer">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #footer="matMenu">
+    <button mat-menu-item (click)="addNode('box')">box</button>
+  </mat-menu>
+  <!-- vertical box -->
+  <button mat-icon-button *ngIf="currentNode.Name === 'vertical box'" [matMenuTriggerFor]="verticalBox">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #verticalBox="matMenu">
+    <button mat-menu-item (click)="addNode('box')">box</button>
+    <button mat-menu-item (click)="addNode('text')">text</button>
+    <button mat-menu-item (click)="addNode('image')">image</button>
+    <button mat-menu-item (click)="addNode('button')">button</button>
+    <button mat-menu-item (click)="addNode('filler')">filler</button>
+    <button mat-menu-item (click)="addNode('spacer')">spacer</button>
+    <button mat-menu-item (click)="addNode('separator')">separator</button>
+    <button mat-menu-item (click)="addNode('video')">video</button>
+  </mat-menu>
+</div>

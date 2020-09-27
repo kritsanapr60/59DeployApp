@@ -1,0 +1,9 @@
+<h1 style="text-align: center;">การดำเนินการ</h1>
+<mat-dialog-content>
+  <quill-editor [style]="editorStyle" [modules]='config' (onContentChanged)="saveDataEditor($event)">
+  </quill-editor>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <button mat-raised-button color="primary" mat-dialog-close (click)="UpdateData()">ตกลง</button>
+  <button mat-raised-button color="warn" mat-dialog-close="false">ยกเลิก</button>
+</mat-dialog-actions>

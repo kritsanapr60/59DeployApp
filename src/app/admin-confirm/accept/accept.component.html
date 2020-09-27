@@ -1,0 +1,16 @@
+<div class="container">
+  <h1 class="center">Upload File</h1>
+  <mat-dialog-content class="file-field big">
+    <a class="btn-floating btn-lg amber darken-2 mt-0 float-left">
+      <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+      <input type="file" multiple (change)="onFileUpload($event.target.files)">
+    </a>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end">
+    <button mat-raised-button color="primary" mat-dialog-close (click)='UploadStorage()'>ตกลง</button>
+    <button mat-raised-button color="warn" mat-dialog-close="false">ยกเลิก</button>
+  </mat-dialog-actions>
+  <mat-dialog-actions *ngIf="uploadPercentage$ | async as percentage">
+    <div>uploading {{percentage}}%</div>
+  </mat-dialog-actions>
+</div>

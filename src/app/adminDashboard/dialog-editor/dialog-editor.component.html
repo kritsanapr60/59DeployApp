@@ -1,0 +1,11 @@
+ให้เหตุผลมาซะดีๆ
+{{data['status']}} {{data['idDoc']}}
+<mat-dialog-content>
+  <quill-editor [style]="editorStyle" [modules]='config' (onContentChanged)="saveDataEditor($event)">
+  </quill-editor>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-dialog-close="false">ยกเลิก</button>
+  <button mat-dialog-close="{{EditorData}}">ตกลง</button>
+</mat-dialog-actions>

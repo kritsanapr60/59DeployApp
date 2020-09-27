@@ -1,0 +1,28 @@
+<div fxLayout="column" fxLayoutAlign="space-around stretch">
+  <h1 class="center">คำขอร้องทั้งหมด</h1>
+  <section class="box">
+    <div *ngFor="let data of Data |async; let i = index">
+      <div *ngIf="data.Status==='pending'" fxLayout="column" fxLayoutAlign="space-around none">
+        <mat-card >
+          <div>
+            ID:{{data.id}}
+            NAME: {{data.name}}
+            <br>
+            USER_ID : {{data.Uid}}
+            <br>
+            STATUS : {{data.Status}}
+            <br>
+            TIME : {{data.Time.toDate() | date:'dd/MM/yyyy'}}
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <!-- <button mat-raised-button color="primary" [routerLink]="['/Accept', {id: data.id}]">ยืนยัน</button>
+              <button mat-raised-button color="warn" [routerLink]="['/Reject', {id: data.id}]">ปฏิเสธ</button> -->
+            <button mat-raised-button color="primary" [routerLink]="['/Accept', {id: data.id}]">ยืนยัน</button>
+              <button mat-raised-button color="warn" (click)="openDialog('reject',data.id)">ปฏิเสธ</button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </section>
+</div>

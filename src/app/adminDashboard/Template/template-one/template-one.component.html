@@ -1,0 +1,34 @@
+<div class="container">
+<section style="margin: 20px 10px 10px 10px;">
+  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="32px" fxLayoutAlign="flex-start">
+    <ng-container class="cardList" *ngFor="let Content of data | async">
+      <mat-card class="mat-card" fxFlex="0 1 calc(25% - 32px)" fxFlex.lt-md="0 1 calc(50% - 32px)" fxFlex.lt-sm="100%">
+        <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px">
+          <div class="text-card-title">
+            <h2>Title:{{Content.data.Title}}</h2>
+          </div>
+          <div>
+            <img class="alligator-turtle" mat-card-image src="{{Content.data.url}}" alt="b8c97f0879b9c071dc6d5ccda5ee44d4.png" border="0">
+          </div>
+          <div>
+            <p>
+              Date :
+              {{ (Content.data.Date?Content.data.Date:this.ngOnInit()).toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+            </p>
+          </div>
+        </div>
+        <mat-card-actions>
+          <button type="button" mat-raised-button color="primary" [routerLink]="['/createContent', {docID: Content.id}]">
+            <mat-icon>edit</mat-icon>
+            แก้ไข
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
+</section>
+<button class="extended-fab-button" mat-fab color="primary" [routerLink]="['/createContent']">
+  <mat-icon>assignment</mat-icon>
+  <span class="extended-fab-button__text">Create Content</span>
+</button>
+</div>

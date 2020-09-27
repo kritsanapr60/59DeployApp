@@ -1,0 +1,157 @@
+<div class="container-dialog">
+  <button class="close" mat-dialog-close>X</button>
+  <br><br>
+  <div *ngFor="let d of cardData">
+    <div *ngIf="d.Name === 'carousel'">
+      <div *ngFor="let child of d.Children">
+        <mat-card class="render-card">
+          <!-- ++++{{child| json}} -->
+          <div *ngFor="let bubbleChild of child.Children">
+            <mat-card-header *ngIf="bubbleChild.Name === 'header'">
+              <!-- header -->
+              <div *ngFor="let headerChild of bubbleChild.Children">
+              </div>
+            </mat-card-header>
+            <div *ngIf="bubbleChild.Name === 'hero'">
+              <!-- hero -->
+              <div *ngFor="let heroChild of bubbleChild.Children">
+                <div *ngIf="heroChild.Type === 'image'">
+                  <img src="{{heroChild.Value}}" alt="Image" width="100" height="100">
+                </div>
+              </div>
+            </div>
+            <mat-card-content *ngIf="bubbleChild.Name === 'body'">
+              <!-- body -->
+              <div *ngFor="let bodyChild of bubbleChild.Children">
+                <div fxFill fxLayout="{{bodyChild.layout?bodyChild.layout:'column'}}" *ngIf="bodyChild.Type === 'box'">
+                  <div fxFlex="{{verticalBoxChildren.flex?verticalBoxChildren.flex:1}} 1 0"
+                    *ngFor="let verticalBoxChildren of bodyChild.Children" style="height: 100px">
+                    <div fxFlex [ngSwitch]="verticalBoxChildren.Name" >
+                      <div *ngSwitchCase="'box'">
+                        box
+                      </div>
+                      <div fxFlex="{{verticalBoxChildren.flex}}" [ngStyle]="{'position': bodyChild.position}"
+                        *ngSwitchCase="'text'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          {{checkFirestore(verticalBoxChildren.Value)}}
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'image'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          <img src="{{checkFirestore(verticalBoxChildren.Value)}}" alt="Image" width="100" height="100">
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'button'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          <button mat-raised-button color="accent">Action</button>
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'filler'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          {{checkFirestore(verticalBoxChildren.Value)}}
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'spacer'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          {{checkFirestore(verticalBoxChildren.Value)}}
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'separator'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          {{checkFirestore(verticalBoxChildren.Value)}}
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'video'">
+                        <div
+                          [ngStyle]="{'display': 'flex', 'height': '100px', 'justify-content': verticalBoxChildren.align, 'align-items': verticalBoxChildren.gravity}">
+                          <iframe [src]="safeUrl(verticalBoxChildren.Value)" width="100%" height="100%"
+                            frameBorder="0"></iframe>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-footer *ngIf="bubbleChild.Name === 'footer'">
+              <!-- footer -->
+              <div *ngFor="let footerChild of bubbleChild.Children">
+                <!-- {{ footerChild.Children  | json }} -->
+                <div fxFill fxLayout="{{ footerChild.layout ? footerChild.layout:'column'}}"
+                  *ngIf="footerChild.Type === 'box'">
+                  <div fxFlex="{{verticalBoxChildren.flex?verticalBoxChildren.flex:1}} 1 0"
+                    *ngFor="let verticalBoxChildren of footerChild.Children">
+                    <!-- <p>Vertical : {{ verticalBoxChildren }}</p> -->
+                    <div fxFlex [ngSwitch]="verticalBoxChildren.Name">
+                      <div *ngSwitchCase="'box'">
+                        box
+                        {{ verticalBoxChildren.gravity }}
+                      </div>
+                      <div fxFlex="{{verticalBoxChildren.flex}}"
+                        [ngStyle]="{'position': footerChild.position, 'text-align': verticalBoxChildren.align, 'vertical-align': verticalBoxChildren.gravity}"
+                        *ngSwitchCase="'text'">
+                        <div [ngStyle]="{'align-items': verticalBoxChildren.gravity}">
+                          {{checkFirestore(verticalBoxChildren.Value)}}
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'image'">
+                        <img src="{{checkFirestore(verticalBoxChildren.Value)}}" alt="Image" width="100" height="100">
+                      </div>
+                      {{ verticalBoxChildren.uri }}
+                      <div *ngSwitchCase="'button'">
+                        <div *ngIf="verticalBoxChildren.style == 'link'">
+                          <a href="{{ verticalBoxChildren.uri }}"
+                            [ngStyle]="{'background-color': verticalBoxChildren.color ? verticalBoxChildren.color : '#17c950', 'color': '#FFFFFF'}"
+                            mat-raised-button class="footer-button"
+                            target="_blank">{{verticalBoxChildren.label ? verticalBoxChildren.label : 'link'}}</a>
+                          &nbsp;
+                        </div>
+                        <div *ngIf="verticalBoxChildren.style == 'primary'">
+                          <button mat-raised-button class="footer-button"
+                            [ngStyle]="{'background-color': verticalBoxChildren.color ? verticalBoxChildren.color : '#17c950', 'color': '#FFFFFF'}">{{verticalBoxChildren.label ? verticalBoxChildren.label : 'Button'}}</button>
+                          &nbsp;
+                        </div>
+                        <div *ngIf="verticalBoxChildren.style == 'secondary'">
+                          <button mat-flat-button class="footer-button"
+                            [ngStyle]="{'background-color': verticalBoxChildren.color ? verticalBoxChildren.color : '#dcdfe5'}">{{verticalBoxChildren.label ? verticalBoxChildren.label : 'Button'}}</button>
+                          &nbsp;
+                        </div>
+                      </div>
+                      <div *ngSwitchCase="'filler'">
+                        **** {{verticalBoxChildren.Name}}
+                      </div>
+                      <div *ngSwitchCase="'spacer'">
+                        **** {{verticalBoxChildren.Name}}
+                      </div>
+                      <div *ngSwitchCase="'separator'">
+                        **** {{verticalBoxChildren.Name}}
+                      </div>
+                    </div>
+                    <!-- <div *ngIf="verticalBoxChildren.Type === 'button'">
+                      <button mat-button>Basic</button>
+                    </div>
+                    <div *ngIf="verticalBoxChildren.Type === 'image'">
+                      <img src="{{footerChild.Value}}" alt="Image" width="100" height="100">
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </mat-card-footer>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- <button mat-button mat-dialog-close>Close</button> -->

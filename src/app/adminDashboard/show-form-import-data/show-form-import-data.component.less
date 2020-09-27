@@ -1,0 +1,137 @@
+.container {
+  display: flex;
+  // flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.header {
+  flex-direction: row;
+  flex: 100%;
+  margin: 20px;
+  text-align: center;
+}
+
+// .section > mat-card {
+//   flex-direction: column;
+//   flex-wrap: wrap;
+// }
+.row-wrap-center {
+  justify-content: center;
+}
+.section {
+  flex: 100%;
+}
+.sort-form {
+  flex: 100%;
+}
+.mat-card {
+  margin: 20px;
+  min-width: 700px;
+  // width: 330px;
+}
+
+
+@media screen and (max-width: 500px) {
+  .mat-form-field {
+    width: 100%;
+    justify-content: center;
+  }
+  // .button-sort {
+  //   width: 100%;
+  // }
+  .mat-raised-button {
+    width: -webkit-fill-available;
+    justify-content: center;
+  }
+  .mat-card {
+    margin: 10px;
+  }
+}
+
+
+
+
+
+// .loader app-loading-spinner {
+//   display: flex;
+//   justify-content: center;
+// }
+
+// app-loading-spinner {
+//   text-align: center;
+//   align-items: center;
+// }
+
+// Button 
+body {
+  background-color: #507ce8;
+  color: #fff;
+  overflow: hidden;
+}
+
+.verhical {
+  display: table-cell;
+  padding: 10px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.float-right {
+  float: right;
+}
+
+.container-fluid {
+  padding-top: 20px;
+}
+
+mat-form-field {
+  padding: 10px;
+}
+
+.example-full-width {
+  width: 50%;
+}
+
+.center {
+  text-align: center;
+}
+
+.extended-fab-button {
+  width: unset;
+  padding: 0 26px;
+  border-radius: 29px;
+  float: right;
+  position: -webkit-sticky;
+  position: sticky;
+
+  top: auto !important;
+  right: 20px !important;
+  bottom: 10px !important;
+  left: auto !important;
+  position: fixed !important;
+}
+
+.extended-fab-button__text {
+  font-weight: 300;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.text-card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+  // background:rgba(0,0,0,.06); 
+  // padding:20px 20px;
+  padding-top: 20px;
+}
+.text-card-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}

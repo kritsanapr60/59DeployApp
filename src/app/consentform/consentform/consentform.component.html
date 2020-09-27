@@ -1,0 +1,247 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<div *ngIf="model && !report" class="padding20 white-bg example-container-sticky">
+  <mat-toolbar color="primary">
+    <span *ngIf="option=='create'">เพิ่มฟอร์ม : <u>{{ model.name }}</u></span>
+    <span *ngIf="option=='edit'">แก้ไขฟอร์ม : <u>{{ model.name }}</u></span>
+    <span class="example-spacer"></span>
+    <!-- <button mat-flat-button color="primary" (click)="updateForm()">
+      Add Form
+    </button> -->
+  </mat-toolbar>
+  <mat-sidenav-container class="example-container">
+
+    <mat-sidenav opened mode="side">
+      <h4 style="font-size: 1.3vw;" style="text-align: center;">Select Fields</h4>
+
+      <!--a draggable element-->
+      <div class="fields" *ngFor="let item of fieldModels" layout="row" layout-align="center center">
+        <div *ngIf="item.type === 'session' || item.type === 'editor'" class="field pointer shadow-bg"
+          [dndDraggable]="item" [dndEffectAllowed]="'copy'" (dndEnd)="onDragEnd($event)" [dndType]="item.type">
+          <i class="fa pull-left">
+            <mat-icon >{{item.icon}}</mat-icon>
+          </i>
+          <h5 style="font-size: 1vw;"> {{item.label}}</h5>
+        </div>
+      </div>
+    </mat-sidenav>
+
+    <!-- Start_FormTitle -->
+    <div class="form-group" style="margin-bottom: 0px !important; padding: 30px 60px 5px 60px;">
+      <mat-card>
+        <div class="title-form">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Title" type="text" class="input-title" [(ngModel)]="model.name" required>
+          </mat-form-field>
+
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- End_FormTitle -->
+
+    <!--a dropzone-->
+    <!--to allow dropping content that is not [dndDraggable] set dndAllowExternal to true-->
+    <section [dndDropzone]="['editor','session']" (dndDragover)="onDragover($event)"
+      (dndDrop)="onDrop($event,model.attributes)" class="dndDropArea"
+      [ngClass]="{'empty':model.attributes.length == 0}" style="padding: 30px 60px 5px 60px;">
+
+      <div class="field" *ngFor="let item of model.attributes;let i= index;" (dndStart)="onDragStart($event)"
+        (dndCanceled)="onDragCanceled($event)" (dndMoved)="onDragged(item, model.attributes, 'move')"
+        [dndEffectAllowed]="'all'" [dndDraggable]="item" [dndType]="item.type">
+        <div class="row form-group">
+          <div class="col-1"><i class="material-icons" dndHandle>drag_handle</i></div>
+          <div class="col-7">
+            <i [ngClass]="item.icon" class="fa pull-left"></i>
+            <!-- <h5>{{item.label}}
+            <span *ngIf="item.required" class="red">*</span></h5> -->
+            <div *ngIf="item.type=='session'">
+
+              <div *ngFor="let netItem of item.children;let indexOfChildren = index">
+
+                <div *ngIf="netItem.type == 'titleSection'" div class="row">
+                  <mat-form-field>
+                    <input matInput placeholder="Title Section" type="text" required [(ngModel)]="netItem.data"
+                      (input)="saveTitleSession($event.target.value,i,netItem.children,indexOfChildren)">
+                  </mat-form-field>
+                </div>
+
+                <div *ngIf="netItem.type == 'editor'">
+                  <div class="col-8">
+                    <label style="text-align: left;"><b>{{netItem.label}}</b></label>
+                  </div>
+                  <quill-editor [style]="editorStyle" [modules]='config' [(ngModel)]="content[i][indexOfChildren]"
+                    (onContentChanged)="saveDataEditor($event,i,netItem.children,indexOfChildren)">
+                  </quill-editor>
+                  <!-- <button (click)="saveDataEditor(i,editorForm.get('editor'))">Save</button> -->
+                </div>
+
+                <div *ngIf="netItem.type == 'sessionFields'" class="row">
+                  <ng-template #recursiveList let-list>
+
+                    <!-- dndPlaceholderRef เพื่อเพิ่ม action ตอนลาก -->
+                    <mat-card dndPlaceholderRef class="dndPlaceholder"></mat-card>
+
+                    <mat-card *ngFor="let item of list;let i = index" [dndDraggable]="item" dndEffectAllowed="move"
+                      [dndDisableIf]="item.disable" (dndStart)="onDragStart($event)"
+                      (dndMoved)="onDragged(item, list, 'move')" (dndCanceled)="onDragged(item, list, 'none')"
+                      (dndEnd)="onDragEnd($event)" [dndType]="item.type">
+
+                      <!-- rander children field -->
+                      <ul *ngIf="item.type == 'field'" dndDragImageRef>
+                        <div class="row">
+                          <div class="col-2">
+                            <mat-icon mat-list-icon dndHandle>drag_handle</mat-icon>
+                          </div>
+                          <div class="col-8">
+                            <li>
+                              {{item.label}}
+                            </li>
+                          </div>
+                          <div class="col-2">
+                            <button (click)="confirmDialog(i,netItem.children)" mat-icon-button aria-label="remove">
+                              <mat-icon color="warn">delete</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </ul>
+                    </mat-card>
+
+                  </ng-template>
+                  <div [dndDropzone]="['field']" (dndDrop)="onDrop($event, netItem.children)"
+                    [ngClass]="{'empty':netItem.children.length == 0}" class="childrenDropArea col-6" style="margin: 5px;">
+                    <label style="text-align: left;"><b>Label Form</b></label>
+                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: netItem.children }">
+                    </ng-container>
+                  </div>
+                  <div class="col-4">
+                    <label style="text-align: left;"><b>Select Label Form</b></label>
+                    <div class="fields" *ngFor="let item of fieldModels" layout="row" layout-align="center center">
+                      <div *ngIf="item.type==='field'" class="field pointer shadow-bg" [dndDraggable]="item"
+                        [dndEffectAllowed]="'copy'" (dndEnd)="onDragEnd($event)" [dndType]="item.type">
+                        <i class="fa pull-left">
+                          <mat-icon style="font-size: 2vw;">radio_button_checked</mat-icon>
+                        </i>
+                        <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                        <label *ngIf="item.required" class="text-danger">*</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ng template ที่สามารถเรียกใช้ผ่าน recursiveList สร้างตัวแปล list -->
+            </div>
+            <div *ngIf="item.type=='editor'">
+              <quill-editor [style]="editorStyle" [modules]='config' [(ngModel)]="content[i]"
+                (onContentChanged)="saveDataEditor($event,i)"></quill-editor>
+              <!-- <button (click)="saveDataEditor(i,editorForm.get('editor'))">Save</button> -->
+            </div>
+          </div>
+          <div class="col-4">
+            <button (click)="confirmDialog(i)" mat-icon-button aria-label="remove">
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <!-- แก้ไข form -->
+      </div>
+      <!--optional placeholder element for dropzone-->
+      <!--will be removed from DOM on init-->
+      <div class="dndPlaceholder" dndPlaceholderRef>
+      </div>
+    </section>
+
+    <div *ngIf="report" class="padding20 white-bg">
+      <div class="row">
+        <div class="col-12 btn-cont">
+          <button mat-button color="primary" (click)="report=false" class="btn btn-primary">
+            << Back</button>
+        </div>
+        <div class="col-12 spacer30">
+        </div>
+        <!-- if records found -->
+        <div *ngIf="reports?.length > 0" class="col-12">
+          <div *ngFor="let records of reports" class="report-block">
+            <div *ngFor="let record of records.attributes">
+              <div *ngIf="record.type !='button' && record.type !='paragraph'" class="row">
+                <div class="col-4">{{record.label}}</div>
+                <div class="col-8">{{record.value}}</div>
+              </div>
+            </div>
+          </div>
+          <!-- <pre>{{reports|json}}</pre> -->
+        </div>
+        <!-- if no records found -->
+        <div *ngIf="reports?.length == 0" class="col-12 btn-cont">
+          No response found
+        </div>
+
+      </div>
+
+    </div>
+    <hr>
+    <!-- <pre *ngIf="model">{{model|json}}</pre> -->
+    <!-- rander -->
+    <div *ngIf="model" class="container marginT60  marginB30" style="max-width:1000px; max-height: 500px !important;">
+      <mat-card style="margin-bottom: 50%;">
+        <div class="row" style="padding:30px;" [style.backgroundColor]="model.theme.bgColor"
+          [style.color]="model.theme.textColor">
+          <div class="col-12">
+            <h2>{{model.name}}</h2>
+          </div>
+          <div *ngIf="success" class="col-12">
+            <div class="form-group">
+              <label>Your form has been submitted.</label>
+            </div>
+          </div>
+          <div *ngIf="!success" class="col-12">
+
+            <div *ngFor="let item of model.attributes" class="form-group">
+
+              <div *ngIf="item.type=='editor'">
+                <div [innerHTML]="item.data"></div>
+              </div>
+
+              <div *ngIf="item.type==='session'">
+                <div *ngFor="let itemSession of item.children">
+                  <div *ngIf="itemSession.type==='titleSection'">
+                    <b>{{itemSession.data}}</b>
+                  </div>
+                  <div *ngIf="itemSession.type==='editor'">
+                    <div [innerHTML]="itemSession.data"></div>
+                  </div>
+                  <div *ngIf="itemSession.type==='sessionFields'">
+                    <ul>
+                      <li *ngFor="let field of itemSession.children">
+                        {{field.label}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div *ngIf="itemSession.type=='radioSession'">
+                    <label class="cust-check-bx">
+                      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                        [(ngModel)]="item.value">
+                        <mat-radio-button class="example-radio-button" *ngFor="let v of itemSession.values"
+                          [value]="v.label">
+                          {{v.label}}
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            
+          </div>
+          <p>Create by : {{nameCreator}}</p>
+        </div>
+      </mat-card>
+    </div>
+    <button class="extended-fab-button" mat-fab color="primary" (click)="updateForm()">
+      <mat-icon>assignment</mat-icon>
+      <span *ngIf="option == 'create'" class="extended-fab-button__text"> Add Form</span>
+      <span *ngIf="option == 'edit'" class="extended-fab-button__text"> Edit Form</span>
+    </button>
+  </mat-sidenav-container>
+</div>

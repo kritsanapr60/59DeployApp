@@ -1,0 +1,273 @@
+<div class="flex-container">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>
+        กรอกฟอร์มข้อมูล
+      </h1>
+    </div>
+  </div>
+  <!-- End Header -->
+
+  <!--Content -->
+  <div class="content">
+    <mat-card class="mat-card">
+      <div *ngIf="model.attributes && loadingForm" [formGroup]="myForm">
+
+        <p><b>ชื่อฟอร์ม : </b> {{ model.name }}</p>
+        <!-- <p><b>ชื่อฟอร์ม Shorten URL : </b> {{ model.formShortedURL }}</p>
+        <p><b>Slug : </b> {{ model.nameShortURL }}</p> -->
+
+        <div *ngFor="let item of model.attributes" class="form-group">
+          <!-- <p>Model : {{ item.value }}</p> -->
+          <div *ngIf="item.type == 'display_form_name'">
+            <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br>
+            <mat-form-field style="width: 100% !important;">
+              <input matInput readonly="{{this.option === 'read'}}" type="text" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}"
+                (input)="slugify($event.target.value)" />
+            </mat-form-field>
+          </div>
+
+          <!-- <div *ngIf="item.type == 'shortenURL'">
+            <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br>
+            <mat-form-field style="width: 100% !important;">
+              <input matInput readonly="{{this.option === 'read'}}" type="text" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                (keypress)="slugify($event)" />
+            </mat-form-field>
+          </div> -->
+
+          <div *ngIf="item.type == 'shortenURL'">
+            <label style="text-align: left; align-items: left"><b>URL slug</b></label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br>
+            <mat-form-field class="example-full-width">
+              <input matInput readonly="{{this.option === 'read'}}" placeholder="ชื่อข้อมูล shorten สำหรับ url" required
+                formControlName="{{item.label}}" [(ngModel)]="nameShortURL">
+            </mat-form-field>
+          </div>
+
+          <!-- <form [formGroup]="checkSlug" novalidate *ngIf="item.type == 'shortenURL'">
+            <label style="text-align: left; align-items: left"><b>URL slug</b></label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br>
+            <mat-form-field class="example-full-width">
+              <input matInput readonly="{{this.option === 'read'}}" placeholder="ชื่อข้อมูล shorten สำหรับ url" formControlName="slug"
+                [formControl]="slug" [(ngModel)]="model.nameShortURL" required>
+            </mat-form-field>
+
+          </form> -->
+
+          <div *ngIf="item.type=='file'&&this.option!='read'" class="image-tag">
+            <div class="view-image">
+              <img *ngIf="option==='edit'" src="{{imageURL?imageURL:'#'}}" id="img_url" alt="your image">
+              <br>
+              <button *ngIf="option === 'edit'" mat-stroked-button color="primary" (click)="imageURL=''">
+                ลบรูป
+              </button>
+            </div>
+
+            <div class="upload-image">
+              <label style="text-align: left;">{{ item.label }}</label>
+              &nbsp;
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <input type="file" multiple formControlName="{{ item.label }}"
+                (change)="onFileUpload($event.target.files)">
+              <br>
+              <mat-form-field class="example-full-width">
+                <input type="text" matInput placeholder="AltText" formControlName="AltText">
+              </mat-form-field>
+              <div *ngIf="uploadPercentage$ | async as percentage">
+                <div>uploading {{percentage}}%</div>
+                <div>Upload เสร็จสิ้น</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="item.type=='meta_tag'">
+            <label style="text-align: left;">{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br>
+            <div *ngFor="let tag of item.children">
+              <label>{{tag.attribute}} {{tag.value}}</label>
+              <br>
+              <mat-form-field class="example-full-width" fxLayout="row">
+                <input type="text" matInput placeholder="content"
+                  formControlName="{{tag.value?tag.value:tag.attribute}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div *ngIf="item.type == 'text'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <br />
+              <input matInput readonly="{{this.option === 'read'}}" type="text" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" style="width: 100% !important;" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'email'">
+            <label>{{ item.label }}</label><label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="email" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'phone'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="text" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'number'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="number" id="{{ item.name }}"
+                min="{{ item.min }}" max="{{ item.max }}" formControlName="{{item.label}}"
+                placeholder="{{ item.placeholder }}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'date'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="date" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'datetime-local'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="datetime-local" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'duration'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="datetime-local" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'time'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <input matInput readonly="{{this.option === 'read'}}" type="time" id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'textarea'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-form-field style="width: 100%;">
+              <textarea readonly="{{this.option === 'read'}}" matInput id="{{ item.name }}"
+                placeholder="{{ item.placeholder }}" formControlName="{{item.label}}"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'paragraph'">
+            <p class="form-text">{{ item.placeholder }}</p>
+          </div>
+
+          <div *ngIf="item.type == 'autocomplete'">
+            <br />
+            <mat-form-field appearance="fill">
+              <mat-label>{{ item.label }}</mat-label>
+              <select readonly="{{this.option === 'read'}}" formControlName="{{item.label}}" matNativeControl
+                required="item.required" style="width: 100%;">
+                <option *ngFor="let v of item.values" [value]="v.value">
+                  {{v.label}}
+                </option>
+              </select>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="item.type == 'checkbox'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <mat-selection-list disabled="{{this.option === 'read'}}" formControlName="{{item.label}}"
+              style="width: 100%;" [(ngModel)]="item.value">
+              <mat-list-option *ngFor="let v of item.values">
+                {{ v.label }}
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+
+          <div *ngIf="item.type == 'radio'">
+            <label>{{ item.label }}</label>
+            <label *ngIf="item.required" class="text-danger">*</label>
+            <br />
+            <label class="cust-check-bx">
+              <mat-radio-group disabled="{{this.option === 'read'}}" formControlName="{{item.label}}"
+                aria-labelledby="example-radio-group-label" class="example-radio-group" [(ngModel)]="item.value">
+                <mat-radio-button class="example-radio-button" *ngFor="let v of item.values" [value]="v.label">
+                  {{ v.label }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </label>
+            <br />
+          </div>
+
+          <div *ngIf="item.type == 'button'&& auth.UidAdmin">
+            <button mat-stroked-button color="primary" id="{{ item.name }}" type="{{ item.subtype }}">
+              {{ item.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="auth.UidAdmin; then AdminBlock else UserBlock"></div>
+      <ng-template #AdminBlock>
+        <button mat-stroked-button color="primary" (click)="saveForm()" type="submit">
+          บันทึก
+        </button>
+        &nbsp;
+        <button *ngIf="option == 'edit'" mat-stroked-button color="primary" (click)="saveForm()" type="submit">
+          แก้ไข
+        </button>
+        <br>
+        <button mat-raised-button color="primary" (click)="backClicked()">
+          กลับ
+        </button>
+        &nbsp;
+      </ng-template>
+
+      <ng-template #UserBlock>
+        <button mat-raised-button color="primary" (click)="backClicked()">
+          กลับ
+        </button>
+      </ng-template>
+
+    </mat-card>
+  </div>
+  <!-- End Content -->
+</div>

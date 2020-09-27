@@ -1,0 +1,72 @@
+
+
+  <div class="container">
+    <div class="header">
+      <h1 >ฟอร์มนำเข้าข้อมูลจากผู้ใช้</h1>
+    </div>
+    <div class="sort-form">
+        <div class="optionQuery">
+        <form [formGroup]="myForm" class="search-box">
+          <mat-form-field>
+            <mat-select id="queryOption" formControlName="queryOption" placeholder="เรียงลำดับโดย">
+              <mat-option value="name">ชื่อ</mat-option>
+              <mat-option value="createDate">วันที่สร้าง</mat-option>
+              <mat-option value="editDate">วันที่แก้ไขข้อมูล</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button class="button-sort" (click)='sortBy()' mat-raised-button color="primary"><span class="material-icons">
+              sort_by_alpha
+            </span></button>
+        </form>
+      </div>
+    </div>
+      
+    <div class="section">
+      <section>
+        <cdk-virtual-scroll-viewport appScrollable (scrollPosition)="scrollHandler($event)" style="height: 1000px;"
+          itemSize="100">
+          <div>
+            <div fxLayout="row wrap" fxLayout.lt-sm="column" class="row-wrap-center">
+              <ng-container class="cardList" *cdkVirtualFor="let form of page.data | async">
+                <mat-card class="mat-card">
+                      <mat-card-header>
+                    <mat-card-title class="text-card-title">
+                      {{ form.name? form.name:'' }}
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                      {{ form.displayNameData }}
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-card-content style="padding:1em;">
+                    <!-- <p><b>Shorten URL : </b>{{ form.FormShortedURL }}</p> -->
+                    <!-- <p><b>Slug : </b>{{ form.NameShortURL }}</p> -->
+                    <p>
+                      <b>วันที่สร้าง :</b>
+                      {{ (form.createDate?form.createDate:this.ngOnInit()).toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+                    </p>
+                    <p>
+                      <b>วันที่แก้ไข :</b>
+                      {{ form.editDate? (form.editDate.toDate() | date:'dd/MM/yyyy h:mm:ss a'): '' }}
+                    </p>
+                    <!-- <p>{{ form.docId }}</p> -->
+                  </mat-card-content>
+                    <mat-card-actions style="padding: 1em;" align="end">
+                      <button type="button" mat-raised-button color="primary" [routerLink]="['/viewDetailFormImport', {'formID':form.id}]">
+                        <mat-icon>find_in_page</mat-icon>
+                        ดูข้อมูล
+                      </button>
+                      <div fxFlex></div>
+                    </mat-card-actions>
+                </mat-card>
+              </ng-container>
+            </div>
+            <!-- <p *ngIf="page.done | async">สิ้นสุด</p> -->
+            <div class="loader">
+              <app-loading-spinner *ngIf="page.loading | async"></app-loading-spinner>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </section>
+    </div>
+  </div>
+  

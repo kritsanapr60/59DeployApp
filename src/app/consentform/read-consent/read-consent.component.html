@@ -1,0 +1,72 @@
+<div>
+
+  <mat-card>
+    <div>
+      <div style="background:rgba(0,0,0,.06); padding:20px 20px; text-align: center;">
+        <h1>{{titleConsent}}</h1>
+      </div>
+      <div style="padding:1em;">
+        <div *ngFor="let item of consentAttributes">
+          <div *ngIf="item.type=='editor'">
+            <div [innerHTML]="item.data" class="text-editor"></div>
+          </div>
+          <div *ngIf="item.type==='session'">
+            <div *ngFor="let itemSession of item.children">
+              <div *ngIf="itemSession.type==='titleSection'">
+                <b>{{itemSession.data}}</b>
+              </div>
+              
+              <div *ngIf="itemSession.type==='editor'">
+                <div *ngIf="itemSession.label === 'Description'">
+                  <div [innerHTML]="itemSession.data"></div>
+                </div>
+              </div>
+
+              <div *ngIf="itemSession.type==='sessionFields'">
+                <ul>
+                  <li *ngFor="let field of itemSession.children">
+                    <label style="text-align: left;"><b>{{ field.label }}</b></label>
+                    <label *ngIf="field.required" class="text-danger">&nbsp; จำเป็นต้องอนุญาต</label>
+                    <!-- {{field.label}} -->
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="itemSession.type=='radioSession'">
+                <label class="cust-check-bx">
+                  <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                    [(ngModel)]="item.value">
+                    <mat-radio-button class="example-radio-button" *ngFor="let v of itemSession.values"
+                      [value]="v.label">
+                      {{ v.label }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </label>
+                <div *ngIf="item.value === 'ไม่ยอมรับ'">
+                  <p [innerHTML]="item.children[3].data" style="color: rgb(255, 106, 0);"></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row">
+      <div fxFlex="20">
+        <button *ngIf="option != 'readConsent'" type="button" mat-raised-button color="primary"
+          [routerLink]="['']">ย้อนกลับ</button>
+      </div>
+      <div fxFlex="60">
+      </div>
+      <div fxFlex="20" fxLayoutAlign="end">
+        <button mat-raised-button color="primary" (click)="submit()">
+          ถัดไป
+        </button>
+      </div>
+    </div>
+
+  </mat-card>
+
+</div>

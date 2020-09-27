@@ -1,0 +1,91 @@
+<!-- <div *ngFor="let item of dataFillOutForm">
+  {{item | json}}
+</div> -->
+<div class="container">
+ 
+  <div class="section-button">
+    <button mat-stroked-button class="float-right" color="primary" [routerLink]="['/FillOutForm', {'option':'add', 'formID':formImportDataID}]">
+      <span class="material-icons">
+        add
+      </span> กรอกฟอร์ม
+    </button>
+  </div>
+
+  <div class="sort-form">
+        <div class="optionQuery">
+        <form [formGroup]="myForm" class="search-box">
+          <mat-form-field>
+            <mat-select id="queryOption" formControlName="queryOption" placeholder="เรียงลำดับโดย">
+              <mat-option value="titleForm">ชื่อ</mat-option>
+              <mat-option value="Date">วันที่สร้าง</mat-option>
+              <mat-option value="editDate">วันที่แก้ไขข้อมูล</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button class="button-sort" (click)='sortBy()' mat-raised-button color="primary"><span class="material-icons">
+              sort_by_alpha
+            </span></button>
+        </form>
+      </div>
+    </div>
+      
+    <div class="section">
+      <section>
+        <cdk-virtual-scroll-viewport appScrollable (scrollPosition)="scrollHandler($event)" style="height: 1000px;"
+          itemSize="100">
+          <div>
+            <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="center">
+              <ng-container class="cardList" *cdkVirtualFor="let form of page.data | async">
+                <mat-card fxFlex="0 1 calc(25% - 33px)" fxFlex.lt-md="0 1 calc(20% - 33px)" fxFlex.lt-sm="100%"
+                style="margin:2em;padding-top:0;padding-left:0;padding-right:0">
+                <mat-card-title class="text-card-title">
+                      {{ form.titleForm? form.titleForm:'' }}
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                    {{ form['Display form name'] }}
+                    </mat-card-subtitle>
+                  <mat-card-content style="padding:1em;">
+                    
+              <p>
+                <b>สร้างโดย : </b> {{ form.nameCreator }}
+              </p>
+                    <p>
+                      <b>วันที่สร้าง :</b>
+                      {{ (form.Date?form.Date:this.ngOnInit()).toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+                    </p>
+                    <p>
+                      <b>วันที่แก้ไข :</b>
+                      {{ form.editDate? (form.editDate.toDate() | date:'dd/MM/yyyy h:mm:ss a'): '' }}
+                    </p>
+                    <!-- <p>{{ form.docId }}</p> -->
+                  </mat-card-content>
+                    <mat-card-actions style="padding: 1em;" align="end">
+                      <div *ngIf="auth.UidAdmin; then AdminBlock else UserBlock"></div>
+      <ng-template #AdminBlock>
+        <button mat-button color="primary" [routerLink]="['/FillOutForm', {'option':'edit', 'formID':formImportDataID, 'formDataID': form.id}]">
+          <mat-icon>create</mat-icon>
+          <span>เเก้ไข</span>
+        </button>
+        <button mat-button color="warn" >
+          <mat-icon>clear</mat-icon>
+          <span>ลบ</span>
+        </button>
+        </ng-template>
+      <ng-template #UserBlock>
+        <button mat-raised-button (click)="openDialog(form.id)">ดูข้อมูลเพิ่มเติม</button>
+      </ng-template>
+                      
+                      <div fxFlex></div>
+                    </mat-card-actions>
+                </mat-card>
+              </ng-container>
+            </div>
+            <!-- <p *ngIf="page.done | async">สิ้นสุด</p> -->
+            <div class="loader">
+              <app-loading-spinner *ngIf="page.loading | async"></app-loading-spinner>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </section>
+    </div>
+  
+</div>

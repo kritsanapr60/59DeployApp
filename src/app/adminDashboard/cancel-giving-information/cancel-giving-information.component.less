@@ -1,0 +1,54 @@
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+.head {
+  flex: 100%;
+}
+
+h1 {
+  text-align: center;
+}
+
+.full-width {
+  flex: 100%;
+}
+
+.button {
+  margin: 5px;
+  justify-content: space-between;
+}
+
+.content {
+  flex: 100%;
+}
+
+mat-card {
+  margin: 5px;
+  margin-bottom: 10px;
+}
+.row-content {
+  // flex: 100%;
+}
+
+.row-button {
+
+}
+
+.section {
+  margin: 5px;
+}
+@media screen and (max-width: 480px) {
+  .button {
+    min-width: 100%;
+    justify-content: flex-end;
+    align-self: flex-end;
+    align-content: flex-end;
+  }
+  .section {
+    text-align: center;
+  }
+}

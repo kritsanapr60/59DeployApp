@@ -1,0 +1,86 @@
+<div fxLayout="column" fxLayoutAlign="space-around stretch">
+  <h1 class="center">ข้อมูลของคุณ</h1>
+  <section class="box">
+    <mat-card fxLayout="row">
+      <button class="button" mat-raised-button color="primary" (click)="reqinfomation()">
+        <mat-icon>send</mat-icon>
+        ส่งคำขอ
+      </button>
+      &nbsp;
+      <button class="button" mat-raised-button color="primary" (click)="show = !show">
+        <mat-icon>history</mat-icon>
+        ประวัติคำขอ
+      </button>
+    </mat-card>
+    <mat-divider></mat-divider>
+    <div *ngFor="let item of Data | async">
+      <div *ngIf="item.Uid===userUID">
+        <div id="show">
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel *ngIf="item.Status==='accept'">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  ดำเนินการเสร็จสิ้น
+                </mat-panel-title>
+                <mat-panel-description>
+                  วันที่ขอ: {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+                  <br>
+                  เวลา : {{ item.Time.toDate() | date:'h:mm:ss a' }}
+                  <a class="status accept"></a>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              ชื่อเจ้าหน้าที่ : {{item.AdminName}}
+              <br>
+              วันที่ยืนยัน : {{ item.TimeAdmin.toDate() | date:'dd/MM/yyyy' }}
+              <br>
+              เวลา : {{ item.TimeAdmin.toDate() | date:'h:mm:ss a' }}
+              <br>
+              ไฟล์ : <a href="{{item.downloadURL}}">Download</a>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <div *ngIf="show;">
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel *ngIf="item.Status==='pending'">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  อยู่ระหว่างดำเนินการ
+                </mat-panel-title>
+                <mat-panel-description>
+                  วันที่ขอ: {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+                  <br>
+                  เวลา : {{ item.Time.toDate() | date:'h:mm:ss a' }}
+                  <a class="status pending"></a>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+            </mat-expansion-panel>
+          </mat-accordion>
+
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel *ngIf="item.Status==='reject'">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  คำขอถูกปฏิเสธ
+                </mat-panel-title>
+                <mat-panel-description>
+                  วันที่ขอ: {{ item.Time.toDate() | date:'dd/MM/yyyy' }}
+                  <br>
+                  เวลา : {{ item.Time.toDate() | date:'h:mm:ss a' }}
+                  <a class="status reject"></a>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              เจ้าหน้าที่ : {{item.AdminName}}
+              <br>
+              วันที่ยืนยัน : {{ item.TimeAdmin.toDate() | date:'dd/MM/yyyy' }}
+              <br>
+              เวลา : {{ item.TimeAdmin.toDate() | date:'h:mm:ss a' }}
+              <br>
+              <u> หมายเหตุ : </u>
+              <p [innerHTML]='item.message'></p>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

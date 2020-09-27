@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-md-3 verhical">
+      <h1> ดูคำขอสำเนาทั้งหมด </h1>
+    </div>
+
+    <div class="col-md-4">
+      <form [formGroup]="myForm">
+        <mat-form-field class="optionQuery">
+          <mat-select id="queryOption" formControlName="queryOption" placeholder="เรียงลำดับโดย">
+            <mat-option value="Time">วันที่สร้าง</mat-option>
+            <mat-option value="Priority">สถานะคำขอ</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button (click)='sortBy()' mat-raised-button color="primary"><span class="material-icons">
+            sort_by_alpha
+          </span></button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <hr />
+    </div>
+  </div>
+  <!-- list req -->
+  <section>
+    <cdk-virtual-scroll-viewport appScrollable (scrollPosition)="scrollHandler($event)" style="height: 1000px"
+      itemSize="90">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="center">
+        <ng-container class="cardList" *cdkVirtualFor="let form of page.data | async">
+          <mat-card fxFlex="0 1 calc(25% - 33px)" fxFlex.lt-md="0 1 calc(20% - 33px)" fxFlex.lt-sm="100%"
+            style="margin:2em; padding-top:0; padding-left: 0; padding-right: 0; ">
+            <mat-card-content style="padding:1em;">
+              <mat-card-subtitle class="text-card-subtitle">{{form.description}}
+              </mat-card-subtitle>
+              <p>
+                <b>สร้างโดย : </b> {{ form.name }}
+              </p>
+              <p>
+                <b>วันที่ส่งคำขอ: </b>{{ form.Time.toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+              </p>
+              <p>
+                <b>สถานะ : </b> {{ form.Status }}
+              </p>
+            </mat-card-content>
+            <mat-card-actions style="padding:1em;" fxLayoutAlign="end">
+              <div *ngIf="form.Status === 'pending'">
+                <button mat-raised-button color="primary" (click)="openDialog('accept',form.id)">ยืนยัน</button>
+                <button mat-raised-button color="warn" (click)="openDialog('reject',form.id)">ปฏิเสธ</button>
+              </div>
+            </mat-card-actions>
+
+          </mat-card>
+        </ng-container>
+        <p *ngIf="page.done | async">สิ้นสุด</p>
+        <app-loading-spinner *ngIf="page.loading | async"></app-loading-spinner>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </section>
+
+
+</div>

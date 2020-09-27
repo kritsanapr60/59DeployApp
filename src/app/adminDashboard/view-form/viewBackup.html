@@ -1,0 +1,81 @@
+
+<div>
+  <button (click)='detailPage()' mat-raised-button><span class="material-icons">
+      arrow_back_ios </span>
+  </button>
+  <!-- Query Form -->
+  <form [formGroup]="myForm">
+    <div fxLayout="row" fxLayoutAlign="end">
+      <mat-card>
+        <mat-form-field class="optionQuery">
+          <mat-select id="queryOption" formControlName="queryOption" placeholder="QueryOption">
+            <mat-option value="title">ชื่อฟอร์ม</mat-option>
+            <mat-option value="nameCreator">ชื่อผู้สร้าง</mat-option>
+            <mat-option value="createDate">วันที่สร้าง</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button (click)='sortBy()' mat-raised-button color="primary"><span class="material-icons">
+            sort_by_alpha
+          </span></button>
+      </mat-card>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end">
+      <button (click)='logout()' mat-raised-button color="warn"><span class="material-icons">
+          logout
+        </span></button>
+    </div>
+  </form>
+</div>
+<!-- End Query Form -->
+
+<!-- Start Search Form -->
+<mat-card>
+  <form [formGroup]="myForm">
+    <mat-form-field>
+      <mat-label>ค้นหาโดย</mat-label>
+      <mat-select formControlName="searchOption">
+        <mat-option *ngFor="let data of datas" [value]="data.value">
+          {{data.valueView}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" matInput placeholder="{{ nameSearch }}" formControlName="searchWord" />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="search()">
+      <span>ค้นหา</span>
+    </button>
+  </form>
+</mat-card>
+<!-- End Search Form -->
+
+<hr>
+<h1> ดูแบบสอบถามทั้งหมด </h1>
+<ul class="list">
+  <cdk-virtual-scroll-viewport appScrollable (scrollPosition)="scrollHandler($event)" style="height: 500px"
+    itemSize="90">
+    <ng-container *cdkVirtualFor="let form of page.data | async">
+      <li>
+        <strong>
+          title {{ form.title }}
+        </strong>
+        <p>
+          description {{ form.description }}
+        </p>
+        <p>
+          <!-- date: {{ form.createDate.toDate() | date:'dd/MM/yyyy h:mm:ss a' }} -->
+        </p>
+        <p>
+          create: {{ form.nameCreator }}
+        </p>
+        <p>
+          <button type="button" [routerLink]="['/add', form.doc ]">editForm</button>
+          <button type="button" [routerLink]="['/consent',form.doc ]">ConsentForm</button>
+        </p>
+      </li>
+
+    </ng-container>
+    <p *ngIf="page.done | async">สิ้นสุด</p>
+    <app-loading-spinner *ngIf="page.loading | async"></app-loading-spinner>
+  </cdk-virtual-scroll-viewport>
+</ul>

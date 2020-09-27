@@ -1,0 +1,113 @@
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-md-3 vertical">
+      <h1> ดูแบบสอบถามทั้งหมด </h1>
+    </div>
+
+    <div class="col-md-5">
+      <form [formGroup]="myForm">
+        <mat-form-field>
+          <mat-label>ค้นหาโดย</mat-label>
+          <mat-select formControlName="searchOption">
+            <mat-option *ngFor="let data of datas" [value]="data.value">
+              {{data.valueView}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input type="text" matInput placeholder="{{ nameSearch }}" formControlName="searchWord" />
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="search()">
+          <span>ค้นหา</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="col-md-4">
+      <form [formGroup]="myForm">
+        <mat-form-field class="optionQuery">
+          <mat-select id="queryOption" formControlName="queryOption" placeholder="QueryOption">
+            <mat-option value="title">ชื่อฟอร์ม</mat-option>
+            <mat-option value="nameCreator">ชื่อผู้สร้าง</mat-option>
+            <mat-option value="createDate">วันที่สร้าง</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button (click)='sortBy()' mat-raised-button color="primary"><span class="material-icons">
+            sort_by_alpha
+          </span></button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <hr />
+    </div>
+  </div>
+
+  <section>
+    <cdk-virtual-scroll-viewport appScrollable (scrollPosition)="scrollHandler($event)" style="height: 1000px"
+      itemSize="90">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="center">
+        <ng-container class="cardList" *cdkVirtualFor="let form of page.data | async">
+          <mat-card fxFlex="0 1 calc(25% - 33px)" fxFlex.lt-md="0 1 calc(20% - 33px)" fxFlex.lt-sm="100%"
+            style="margin:2em;padding-top:0;padding-left:0;padding-right:0">
+            <mat-card-title class="text-card-title">
+              {{form.title}}
+            </mat-card-title>
+            <mat-card-content style="padding:1em;">
+              <mat-card-subtitle class="text-card-subtitle">{{form.description}}
+              </mat-card-subtitle>
+              <p>
+                date: {{ (form.createDate?form.createDate:this.ngOnInit()).toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+              </p>
+              <p>
+                <b>สร้างโดย : </b> {{ form.nameCreator }}
+              </p>
+            </mat-card-content>
+            <div *ngIf="auth.UidAdmin; then AdminBlock else UserBlock"></div>
+            <ng-template #AdminBlock>
+              <mat-card-actions style="padding:1em;" align="end">
+                <button mat-raised-button color="primary" [routerLink]="['/add', form.id ]">EDIT</button>
+                <button mat-raised-button color="primary" [routerLink]="['/consent', form.id ]">CONSENT</button>
+                <div fxFlex></div>
+                <button mat-icon-button [matMenuTriggerFor]="appMenu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #appMenu="matMenu">
+                  <button mat-menu-item [routerLink]="['/readConsent', {option: 'readConsent' ,docID: form.id}]">
+                    <mat-icon>local_library</mat-icon>
+                    อ่านconsent
+                  </button>
+                  <button mat-menu-item (click)='delete(form.id,form.title)'>
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </mat-menu>
+              </mat-card-actions>
+            </ng-template>
+            <ng-template #UserBlock>
+              <mat-card-actions style="padding:1em;" align="center">
+                  <button mat-raised-button color="primary" [routerLink]="['/readConsent', {option: 'readConsent' ,docID: form.id}]">
+                    <mat-icon>local_library</mat-icon>
+                    อ่าน consent
+                  </button>
+              </mat-card-actions>
+            </ng-template>
+
+
+          </mat-card>
+        </ng-container>
+        <p *ngIf="page.done | async">สิ้นสุด</p>
+        <app-loading-spinner *ngIf="page.loading | async"></app-loading-spinner>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </section>
+
+
+</div>
+<button class="extended-fab-button" mat-fab color="primary" [routerLink]="['/add','add']">
+  <mat-icon>assignment</mat-icon>
+  <span class="extended-fab-button__text">Create Form</span>
+</button>

@@ -1,0 +1,108 @@
+<div class="container">
+  <mat-card class="mat-card-global">
+  <!-- <div fxLayout="column" class="container" fxLayoutAlign="space-around center"> -->
+    <form class="example-form" [formGroup]="myForm" *ngIf="loadingForm">
+      <h1>สร้างเนื้อหา</h1>
+      <mat-form-field class="example-full-width">
+        <input type="text" matInput placeholder="Title" formControlName="Title">
+      </mat-form-field>
+      <h2>Upload Images</h2>
+      <mat-card class="inner-mat-card">
+        <div fxLayoutAlign="row" fxLayoutGap="10px">
+          <div fxFlex>
+            <input type="file" multiple formControlName='Image' (change)="onFileUpload($event.target.files)">
+          </div>
+          <div fxFlex="100">
+            <mat-form-field class="example-full-width">
+              <input type="text" matInput placeholder="AltText" formControlName="AltText">
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="uploadPercentage$ | async as percentage">
+          <div>uploading {{percentage}}%</div>
+          <div>Upload เสร็จสิ้น</div>
+        </div>
+      </mat-card>
+      <h2>Add Meta Tag</h2>
+      <div formArrayName="items" *ngFor="let item of myForm.get('items')['controls']; let i = index;">
+        <ng-container [formGroupName]="i"
+          *ngIf="myForm.get('items')['controls'][i]['value']['attribute'] != 'charset' && myForm.get('items')['controls'][i]['value']['attribute'] != 'prefix'">
+          <mat-card class="example-form inner-mat-card">
+            <div fxLayoutAlign="row" fxLayoutGap="15px">
+              <span fxFlex="30" fxLayoutAlign=" center">
+                {{"mata "+myForm.get('items')['controls'][i]['value']['attribute']}}
+              </span>
+              <mat-form-field fxFlex="30">
+                <input type="text" placeholder="value" aria-label="value" matInput formControlName="value"
+                  [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <mat-form-field fxFlex="30" class="example-full-width">
+                <input type="text" matInput placeholder="Content" formControlName="content">
+              </mat-form-field>
+              <div class="mat-cell" fxFlex="10">
+                <button mat-icon-button color="warn" type="button" title="delete item" (click)="removeItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        </ng-container>
+        <ng-container [formGroupName]="i" *ngIf="myForm.get('items')['controls'][i]['value']['attribute'] === 'charset'">
+          <mat-card class="example-form inner-mat-card">
+            <div fxLayoutAlign="row" fxLayoutGap="15px">
+              <span  fxLayoutAlign=" center">
+                {{"mata "+myForm.get('items')['controls'][i]['value']['attribute']}}
+              </span>
+              <mat-form-field fxFlex="60">
+                <input type="text" matInput placeholder="Content" formControlName="content">
+              </mat-form-field>
+              <div class="mat-cell" fxFlex="10">
+                <button mat-icon-button color="warn" type="button" title="delete item" (click)="removeItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        </ng-container>
+        <ng-container [formGroupName]="i" *ngIf="myForm.get('items')['controls'][i]['value']['attribute'] === 'prefix'">
+          <mat-card>
+            <div fxLayoutAlign="row" fxLayoutGap="15px">
+              <span fxFlex="30" fxLayoutAlign=" center">
+                {{"mata "+myForm.get('items')['controls'][i]['value']['attribute']}}
+              </span>
+              <mat-form-field fxFlex="60" class="example-full-width">
+                <input type="text" matInput placeholder="Content" formControlName="content">
+              </mat-form-field>
+              <div class="mat-cell" fxFlex="10">
+                <button mat-icon-button color="warn" type="button" title="delete item" (click)="removeItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        </ng-container>
+      </div>
+      <button class="add-attributes" mat-raised-button color="primary" [matMenuTriggerFor]="menu" type="button" title="new item">
+        <mat-icon>add</mat-icon>Add Attributes
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addAttribute('charset')">Charset</button>
+        <button mat-menu-item (click)="addNewItem('httpEquiv')">Http Equiv</button>
+        <button mat-menu-item (click)="addNewItem('name')">Name</button>
+        <button mat-menu-item (click)="addNewItem('property')">property</button>
+        <button mat-menu-item (click)="addAttribute('prefix')">prefix</button>
+      </mat-menu>
+    </form>
+    <hr>
+    <button *ngIf="option === 'create'" mat-raised-button color="primary" (click)="UploadStorage()"
+    [disabled]="!myForm.valid">Submit</button>
+    <button *ngIf="option === 'edit'" mat-raised-button color="primary" (click)="UploadStorage()"
+      [disabled]="!myForm.valid">Edit</button>
+  <!-- </div> -->
+</mat-card>
+</div>

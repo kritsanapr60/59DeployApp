@@ -1,0 +1,184 @@
+<div *ngIf="edit == 'show'" class="form-group" style="margin-bottom: 0px !important; padding: 5px 20px 5px 20px;">
+  <mat-card style="max-width: 100%; margin: auto;">
+    <h2>ข้อมูลส่วนตัว</h2>
+    <div *ngFor="let item of userData | keyvalue">
+      <div *ngIf="item.key == 'documentForm' || item.key == 'uid' || item.key == 'picture'; else elseTemplate">
+      </div>
+      <ng-template #elseTemplate>
+        <div>
+          <small>{{item.key}}</small>
+          <p>{{item.value}}</p>
+        </div>
+      </ng-template>
+    </div>
+    <button mat-raised-button color="primary" (click)="edit='edit'" style="align-items: center;"><span class="material-icons">
+        edit
+      </span>แก้ไขข้อมูล</button>
+  </mat-card>
+</div>
+
+<div *ngIf="edit == 'edit'" class="form-group" style="margin-bottom: 0px !important; padding: 5px 20px 5px 20px;">
+  <div id="example-form">
+    <mat-card style="max-width: 100%; margin: auto;">
+      <form [formGroup]="myForm">
+        <div class="row" style="padding: 5px;">
+          <div class="col-12">
+            <h2>ข้อมูลส่วนตัว</h2>
+          </div>
+          <div class="col-12">
+            <div *ngFor="let item of fieldAttributes" class="form-group">
+              <div *ngIf="item.type == 'text'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <br />
+                  <input matInput type="text" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" style="width: 100% !important;" />
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="item.type == 'email'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="email" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'phone'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="text" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'number'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="number" id="{{ item.name }}" min="{{ item.min }}" max="{{ item.max }}"
+                    formControlName="{{item.label}}" placeholder="{{ item.placeholder }}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'date'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="date" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'datetime-local'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'duration'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'time'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <input matInput type="time" id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'textarea'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-form-field style="width: 100%;">
+                  <textarea matInput id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}"></textarea>
+                </mat-form-field>
+              </div>
+              <!-- <div *ngIf="item.type=='file'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br>
+                <input type="file" id="{{item.name}}" placeholder="{{item.placeholder}}" accept="image/*">
+                <img id="blah" src="{{userData[item.label]}}" alt="your image" width="50px" height="50px" />
+              </div> -->
+              <div *ngIf="item.type == 'paragraph'">
+                <p class="form-text">{{ item.placeholder }}</p>
+              </div>
+              <div *ngIf="item.type == 'autocomplete'">
+                <br />
+                <mat-form-field appearance="fill">
+                  <mat-label>{{ item.label }}</mat-label>
+                  <select matNativeControl required="item.required" style="width: 100%;"
+                    formControlName="{{item.label}}">
+                    <option *ngFor="let v of item.values" [value]="v.value">{{
+                  v.label
+                }}</option>
+                  </select>
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'checkbox'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <mat-selection-list style="width: 100%;" formControlName="{{item.label}}">
+                  <mat-list-option *ngFor="let v of item.values">
+                    {{ v.label }}
+                  </mat-list-option>
+                </mat-selection-list>
+              </div>
+              <div *ngIf="item.type == 'radio'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required" class="text-danger">*</label>
+                <br />
+                <label class="cust-check-bx">
+                  <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                    [(ngModel)]="item.value" formControlName="{{item.label}}">
+                    <mat-radio-button class="example-radio-button" *ngFor="let v of item.values" [value]="v.label">
+                      {{ v.label }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </label>
+                <br />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+      <div fxLayout="row">
+        <div fxFlex="40" fxLayoutAlign="center">
+          <button mat-raised-button color="primary" (click)="edit='show'">
+            <span class="material-icons">
+              arrow_back_ios
+            </span>กลับ
+          </button>
+        </div>
+        <div fxFlex="20">
+        </div>
+        <div fxFlex="40" fxLayoutAlign="center">
+          <button mat-raised-button color="primary" (click)="saveData()">
+            <span class="material-icons">
+              subdirectory_arrow_left
+            </span>บันทึก
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

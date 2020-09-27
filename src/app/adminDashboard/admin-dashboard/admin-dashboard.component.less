@@ -1,0 +1,126 @@
+// button {
+//     display: block;
+//     width: 100%;
+//     padding: 8px 0;
+//     margin: 8px auto
+//   }
+
+//   p {
+//     border-bottom: 1px dashed #ddd
+//   }
+
+// #pictureUrl {
+//   display: block;
+//   margin: 0 auto;
+//   width: 12%;
+//   display: -moz-box;
+//   display: -webkit-box;
+//   display: box;
+//   -moz-box-pack: center;
+//   -moz-box-align: center;
+//   -webkit-box-pack: center;
+//   -webkit-box-align: center;
+//   box-pack: center;
+//   box-align: center;
+//   -moz-border-radius: 100px;
+//   -webkit-border-radius: 100px;
+//   border-radius: 100px;
+// }
+
+// #accessToken,
+// #utouId {
+//   display: block;
+//   overflow: auto
+// }
+// img{
+//   object-fit: cover;
+// }
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  
+}
+/* Column Gap */
+.cardList > * {
+  box-sizing: border-box;
+}
+.cardList > *:not(:last-child) {
+  margin-right: 32px;
+}
+/* Item sizing */
+.cardListItem {
+  flex: 0 1 calc(33.3% - 32px);
+}
+/* medium size viewport */
+@media screen and (max-width: 959px) {
+  /* Column Gap */
+  .cardList > *:not(:last-child) {
+    margin-right: 32px;
+  }
+  /* Item sizing */
+  .cardListItem {
+    flex: 0 1 calc(50% - 32px);
+  }
+}
+/* small size viewport */
+@media screen and (max-width: 599px) {
+  .cardList {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .cardList > *:not(:last-child) {
+    margin-right: unset;
+    margin-bottom: 32px;
+  }
+}
+
+.container-sticky {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+// footer {
+//   padding: 20px;
+//   position: fixed;
+//   left: 0;
+//   bottom: 0;
+//   width: 100%;
+//   background-color: red;
+//   color: white;
+//   text-align: center;
+// }
+
+:host {
+  .mat-icon {
+    vertical-align: middle;
+    margin-right: 20px;
+  }
+  .profile-card {
+    text-align: center;
+    padding: 0 20px 20px 20px;
+    img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}

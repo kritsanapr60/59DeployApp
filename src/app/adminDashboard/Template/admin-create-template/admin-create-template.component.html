@@ -1,0 +1,604 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<div *ngIf="model && !report" class="padding20 white-bg example-container-sticky">
+  <mat-sidenav-container class="example-container">
+
+    <mat-sidenav opened mode="side">
+      <h4 style="font-size: 1.3vw;" style="text-align: center;">Select Fields</h4>
+      <!--a draggable element-->
+      <div class="fields" *ngFor="let item of TemplateAttr" layout="row" layout-align="center center">
+        <div class="field pointer shadow-bg" [dndDraggable]="item" [dndEffectAllowed]="'copy'"
+          (dndEnd)="onDragEnd($event)">
+          <i class="fa pull-left">
+            <mat-icon style="font-size: 2vw;">{{ item.icon }}</mat-icon>
+          </i>
+          <h5 style="font-size: 1vw;"> {{ item.label }}</h5>
+        </div>
+      </div>
+
+      <!-- Title Template-->
+      <!-- <h4 style="font-size: 1.3vw;" style="text-align: center;">Template Card</h4>
+      <div class="fields" *ngFor="let item of fieldModels" layout="row" layout-align="center center">
+        <div class="field pointer shadow-bg" [dndDraggable]="item" [dndEffectAllowed]="'copy'"
+          (dndEnd)="onDragEnd($event)">
+          <i class="fa pull-left">
+            <mat-icon style="font-size: 2vw;">{{ item.icon }}</mat-icon>
+          </i>
+          <h5 style="font-size: 1vw;"> {{ item.label }}</h5>
+        </div>
+      </div> -->
+
+    </mat-sidenav>
+
+    <!-- Start_FormTitle -->
+
+    <div class="form-group" style="margin-bottom: 0px !important; padding: 30px 60px 5px 60px;">
+      <mat-card>
+        <div style="text-align: center;">
+          <h2>AdminTemplate</h2>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- <div class="form-group" style="margin-bottom: 0px !important; padding: 30px 60px 5px 60px;">
+      <mat-card>
+        <div class="title-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Form Name</mat-label>
+            <input matInput placeholder="{{ model.name }}" type="text" class="input-title" [(ngModel)]="model.name"
+              required />
+          </mat-form-field>
+          <br />
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Form Description" [(ngModel)]="model.description" required></textarea>
+          </mat-form-field>
+          <p>Create by : {{ nameCreator }}</p>
+        </div>
+      </mat-card>
+    </div> -->
+
+    <!-- End_FormTitle -->
+
+    <!--a dropzone-->
+    <!--to allow dropping content that is not [dndDraggable] set dndAllowExternal to true-->
+    <section dndDropzone (dndDragover)="onDragover($event)" (dndDrop)="onDrop($event, model.attributes)"
+      class="dndDropArea" [ngClass]="{ empty: model.attributes.length == 0 }"
+      style="margin-bottom: 0px !important; padding: 30px 60px 5px 60px; ">
+
+      <div class="field" *ngFor="let item of model.attributes; let i = index" (dndStart)="onDragStart($event)"
+        (dndCanceled)="onDragCanceled($event)" (dndMoved)="onDragged(item, model.attributes, 'move')"
+        [dndEffectAllowed]="'all'" [dndDraggable]="item">
+
+        <div class="row form-group" style="margin: auto;">
+          <div class="col-1">
+            <i class="material-icons" dndHandle matTooltip="Drag and Drop">drag_handle</i>
+          </div>
+
+          <div class="col-10">
+            <div *ngIf="item.label == 'Display form name'">
+              <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+            </div>
+            <div *ngIf="item.label == 'Shorten URL'">
+              <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+            </div>
+            <div *ngIf="item.label == 'Phone'">
+              <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+            </div>
+            <div *ngIf="item.label == 'Meta Tag'">
+              <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+            </div>
+            <div *ngIf="item.label == 'Upload Image'">
+              <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+            </div>
+
+            <div *ngIf="item.type == 'text'">
+              <label style="text-align: left; align-items: left"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br>
+              <!-- <mat-form-field style="width: 100% !important;">
+                <input matInput type="text" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field> -->
+            </div>
+            <div *ngIf="item.type == 'datetime-local'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <!-- <mat-form-field style="width: 100% !important;">
+                <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field> -->
+            </div>
+            <!-- <div *ngIf="item.type == 'email'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <input matInput type="email" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="item.type == 'phone'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <input matInput type="text" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="item.type == 'number'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <input matInput type="number" id="{{ item.name }}" min="{{ item.min }}" max="{{ item.max }}"
+                  placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="item.type == 'date'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <input matInput type="date" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div> -->
+            <!-- <div *ngIf="item.type == 'datetime-local'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div> -->
+            <!-- <div *ngIf="item.type == 'duration'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="item.type == 'time'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;"><input matInput type="time" id="{{ item.name }}"
+                  placeholder="{{ item.placeholder }}" />
+              </mat-form-field>
+            </div>
+            <div *ngIf="item.type == 'textarea'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-form-field style="width: 100% !important;">
+                <textarea matInput id="{{ item.name }}" placeholder="{{ item.placeholder }}"></textarea>
+              </mat-form-field>
+            </div> -->
+            <!-- <div *ngIf="item.type=='file'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br>
+              <input type="file" id="{{item.name}}" placeholder="{{item.placeholder}}" accept="image/*">
+            </div> -->
+            <!-- <div *ngIf="item.type == 'paragraph'">
+              <p class="form-text">{{ item.placeholder }}</p>
+            </div>
+            <div *ngIf="item.type == 'autocomplete'">
+              <br />
+              <mat-form-field appearance="fill">
+                <mat-label>{{ item.label }}</mat-label>
+                <select matNativeControl required="item.required" style="width: 100% !important;">
+                  <option *ngFor="let v of item.values" [value]="v.value">{{
+                    v.label
+                  }}</option>
+                </select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="item.type == 'checkbox'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <mat-selection-list style="width: 100% !important;">
+                <mat-list-option *ngFor="let v of item.values">
+                  {{ v.label }}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+            <div *ngIf="item.type == 'radio'">
+              <label style="text-align: left;"><b>{{ item.label }}</b></label>
+              <label *ngIf="item.required" class="text-danger">*</label>
+              <br />
+              <label class="cust-check-bx">
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                  [(ngModel)]="item.value">
+                  <mat-radio-button class="example-radio-button" *ngFor="let v of item.values" [value]="v.label">
+                    {{ v.label }}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </label>
+              <br />
+            </div> -->
+
+          </div>
+          <div class="col-1">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-10">
+            <i *ngIf="item.toggle" (click)="item.toggle = false"
+              class="material-icons float-right">keyboard_arrow_up</i>
+            <i *ngIf="!item.toggle" (click)="item.toggle = true" class="material-icons float-right"
+              matTooltip="More info">keyboard_arrow_down</i>
+            <button (click)="confirmDialog(i)" mat-icon-button aria-label="remove" class="float-right"
+              matTooltip="Delete">
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </div>
+          <div class="col-1"></div>
+        </div>
+
+        <!-- Start Require -->
+        <div *ngIf="item.toggle" class="toggle-Wrapper"
+          style="width: 70% !important; align-items: center; margin: auto;">
+          <div class="form-group">
+            <!-- <label>Label</label>
+            <input matInput type="text" [(ngModel)]="item.label" /> -->
+            <mat-form-field class="example-form-field example-full-width">
+              <mat-label>Label : </mat-label>
+              <input matInput type="text" [(ngModel)]="item.label">
+              <button mat-button *ngIf="item.label" matSuffix mat-icon-button aria-label="Clear"
+                (click)="item.label=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <!-- <label>Name</label>
+            <input matInput type="text" [(ngModel)]="item.name" /> -->
+            <mat-form-field class="example-form-field example-full-width">
+              <mat-label>Name : </mat-label>
+              <input matInput type="text" [(ngModel)]="item.name">
+              <button mat-button *ngIf="item.name" matSuffix mat-icon-button aria-label="Clear" (click)="item.name=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <!-- <label>Placeholder</label>
+            <input matInput type="text" [(ngModel)]="item.placeholder" /> -->
+            <mat-form-field class="example-form-field example-full-width">
+              <mat-label>Placeholder : </mat-label>
+              <input matInput type="text" [(ngModel)]="item.placeholder">
+              <button mat-button *ngIf="item.placeholder" matSuffix mat-icon-button aria-label="Clear"
+                (click)="item.placeholder=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <!-- <label>Regex</label>
+            <input matInput type="text" [(ngModel)]="item.regex" /> -->
+            <mat-form-field class="example-form-field example-full-width">
+              <mat-label>Regex : </mat-label>
+              <input matInput type="text" [(ngModel)]="item.regex">
+              <button mat-button *ngIf="item.regex" matSuffix mat-icon-button aria-label="Clear"
+                (click)="item.regex=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+          <div *ngIf="item.regex" class="form-group">
+            <!-- <label>Error text</label>
+            <input matInput type="text" [(ngModel)]="item.errorText" /> -->
+            <mat-form-field class="example-form-field example-full-width">
+              <mat-label>Error Text: </mat-label>
+              <input matInput type="text" [(ngModel)]="item.errorText">
+              <button mat-button *ngIf="item.errorText" matSuffix mat-icon-button aria-label="Clear"
+                (click)="item.errorText=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <!-- number -->
+          <div *ngIf="item.type == 'number'" class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>Min</label>
+                <br />
+                <input matInput type="text" [(ngModel)]="item.min" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label>Max</label>
+                <br />
+                <input matInput type="text" [(ngModel)]="item.max" />
+              </div>
+            </div>
+          </div>
+
+          <!-- radio || checkbox || autocomplete -->
+          <div *ngIf="
+              item.type == 'radio' ||
+              item.type == 'checkbox' ||
+              item.type == 'autocomplete'
+            ">
+            <div class="row">
+              <div class="col-5">
+                <div class="form-group">
+                  <label>Label</label>
+                  <br />
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <label>Value</label>
+                  <br />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                  <label>Action</label>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let i of item.values; let valueIndex = index" class="row">
+              <div class="col-5">
+                <div class="form-group">
+                  <input matInput type="text" [(ngModel)]="i.label" />
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <input matInput type="text" [(ngModel)]="i.value" />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                  <label (click)="item.values.splice(valueIndex, 1)">remove</label>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-5">
+                <div class="form-group">
+                  <input matInput type="text" [(ngModel)]="value.label" />
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <input matInput type="text" [(ngModel)]="value.value" />
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="form-group">
+                  <label (click)="addValue(item.values)">Add</label>
+                  <br />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Require -->
+
+      </div>
+      <div class="dndPlaceholder" dndPlaceholderRef></div>
+    </section>
+
+    <div *ngIf="report" class="padding20 white-bg">
+      <div class="row">
+        <div class="col-12 btn-cont">
+          <button mat-button color="primary" (click)="report = false" class="btn btn-primary">
+            << Back </button>
+        </div>
+        <div class="col-12 spacer30">
+        </div>
+        <!-- if records found -->
+        <div *ngIf="reports?.length > 0" class="col-12">
+          <div *ngFor="let records of reports" class="report-block">
+            <div *ngFor="let record of records.attributes">
+              <div *ngIf="record.type != 'button' && record.type != 'paragraph'" class="row">
+                <div class="col-4">{{ record.label }}</div>
+                <div class="col-8">{{ record.value }}</div>
+              </div>
+            </div>
+          </div>
+          <!-- <pre>{{reports|json}}</pre> -->
+        </div>
+        <!-- if no records found -->
+        <div *ngIf="reports?.length == 0" class="col-12 btn-cont">
+          No response found
+        </div>
+      </div>
+    </div>
+    <!-- <pre *ngIf="model">{{model|json}}</pre> -->
+    <div class="form-group" style="margin-bottom: 0px !important; padding: 30px 60px 5px 60px;">
+      <div id="example-form" *ngIf="model" class="container marginT60 marginB30">
+        <mat-card style="max-width: 50%; margin: auto;">
+          <div class="row" style="padding: 30px;" [style.backgroundColor]="model.theme.bgColor"
+            [style.color]="model.theme.textColor">
+            <form class="ftheme">
+              <div *ngIf="!success" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px">
+                <div *ngFor="let item of model.attributes" class="form-group">
+                  <!-- Label: {{item.label}}
+                  <br>
+                  Type: {{item.type}} -->
+                  <div *ngIf="item.type == 'display_form_name'">
+                    <h3 style="text-align: center;"><b>{{ item.label }}</b></h3>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                  </div>
+
+                  <div *ngIf="item.type == 'phone'">
+                    <h3 style="text-align: center;"><b>{{ item.label }}</b></h3>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                  </div>
+
+                  <div *ngIf="item.type == 'shortenURL'">
+                    <h3 style="text-align: center;"><b>{{ item.label }}</b></h3>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                  </div>
+
+                  <div *ngIf="item.type == 'Phone'">
+                    <h3 style="text-align: center;"><b>{{ item.label }}</b></h3>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                  </div>
+
+                  <div *ngIf="item.type == 'file'">
+                    <!-- {{ item.value }} -->
+                    <img class="alligator-turtle" src="https://www.w3schools.com/howto/img_avatar.png" alt="">
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                  </div>
+
+
+                  <div *ngIf="item.type == 'text'">
+                    <div *ngIf="item.icon =='title'">
+                      <h3 style="text-align: center;"><b>{{ item.label }}</b></h3>
+                      <label *ngIf="item.required" class="text-danger">*</label>
+                    </div>
+
+                    <div *ngIf="item.icon =='photo'">
+                      <img class="alligator-turtle" src="{{ item.value }}" alt="">
+                      <label *ngIf="item.required" class="text-danger">*</label>
+                    </div>
+                  </div>
+
+                  <div *ngIf="item.type == 'datetime-local'">
+                    <label style="text-align: center;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <!-- <mat-form-field style="width: 100%;">
+                      <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field> -->
+                  </div>
+                  <div *ngIf="item.type == 'email'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="email" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div>
+                  <!-- <div *ngIf="item.type == 'phone'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="text" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div> -->
+                  <div *ngIf="item.type == 'number'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="number" id="{{ item.name }}" min="{{ item.min }}" max="{{ item.max }}"
+                        placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="item.type == 'date'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="date" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div>
+                  <!-- <div *ngIf="item.type == 'datetime-local'">
+                    <label style="text-align: center;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div> -->
+                  <div *ngIf="item.type == 'duration'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="datetime-local" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="item.type == 'time'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <input matInput type="time" id="{{ item.name }}" placeholder="{{ item.placeholder }}" />
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="item.type == 'textarea'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-form-field style="width: 100%;">
+                      <textarea matInput id="{{ item.name }}" placeholder="{{ item.placeholder }}"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <!-- <div *ngIf="item.type=='file'">
+                <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                <label *ngIf="item.required"
+                  class="text-danger">*</label>
+                <br>
+                <input type="file" id="{{item.name}}" placeholder="{{item.placeholder}}" accept="image/*">
+                <img id="blah" src="#" alt="your image" />
+              </div> -->
+                  <div *ngIf="item.type == 'paragraph'">
+                    <p class="form-text">{{ item.placeholder }}</p>
+                  </div>
+                  <div *ngIf="item.type == 'autocomplete'">
+                    <br />
+                    <mat-form-field appearance="fill">
+                      <mat-label>{{ item.label }}</mat-label>
+                      <select matNativeControl required="item.required" style="width: 100%;">
+                        <option *ngFor="let v of item.values" [value]="v.value">{{
+                  v.label
+                }}</option>
+                      </select>
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="item.type == 'checkbox'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <mat-selection-list style="width: 100%;">
+                      <mat-list-option *ngFor="let v of item.values">
+                        {{ v.label }}
+                      </mat-list-option>
+                    </mat-selection-list>
+                  </div>
+                  <div *ngIf="item.type == 'radio'">
+                    <label style="text-align: left;"><b>{{ item.label }}</b></label>
+                    <label *ngIf="item.required" class="text-danger">*</label>
+                    <br />
+                    <label class="cust-check-bx">
+                      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                        [(ngModel)]="item.value">
+                        <mat-radio-button class="example-radio-button" *ngFor="let v of item.values" [value]="v.label">
+                          {{ v.label }}
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </label>
+                    <br />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <button class="extended-fab-button" mat-fab color="primary" (click)="updateForm()">
+      <mat-icon>assignment</mat-icon>
+      <span *ngIf="option === 'add'" class="extended-fab-button__text">Add Form</span>
+      <span *ngIf="option === 'edit'" class="extended-fab-button__text">Edit Form</span>
+    </button>
+  </mat-sidenav-container>
+</div>

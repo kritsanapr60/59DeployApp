@@ -1,0 +1,104 @@
+<div class="flex-container">
+
+  <div class="head">
+    <h1>คำขอยกเลิกของผู้ใช้</h1>
+  </div>
+
+
+  <div class="button full-width">
+    <button class="button" mat-stroked-button color="primary" (click)="readData('ยกเลิกการเก็บข้อมูลส่วนบุคคล')">
+      <mat-icon>description</mat-icon>
+      ยกเลิกการเก็บข้อมูลส่วนบุคคล
+    </button>
+    <button class="button" mat-stroked-button color="primary" (click)="readData('ยกเลิกการใช้ข้อมูลส่วนบุคคล')">
+      <mat-icon>recent_actors</mat-icon>
+      ยกเลิกการใช้ข้อมูลส่วนบุคคล
+    </button>
+    <button class="button" mat-stroked-button color="primary" (click)="readData('ยกเลิกการเปิดเผยข้อมูลส่วนบุคคล')">
+      <mat-icon>security</mat-icon>
+      ยกเลิกการเปิดเผยข้อมูลส่วนบุคคล
+    </button>     
+  </div>
+  
+  
+  <div class="content">
+    <div *ngFor="let dataUserRequest of dataUserRequests | async">
+    <mat-card>
+      <div class="row-content">
+        <b>เลขเอกสารคำขอ :</b> {{dataUserRequest.id}}
+        <br>
+        <b>ชื่อผู้ใช้ :</b> {{ dataUserRequest.data.Name }}
+        <br>
+        <b> รหัสผู้ใช้ :</b> {{dataUserRequest.data.Uid}}
+        <br>
+        <b>ชนิดคำขอยกเลิก :</b> {{dataUserRequest.data.Request}}
+        <br>
+        <b>วันที่ขอยกเลิก :</b> {{dataUserRequest.data.Time.toDate() | date:'dd/MM/yyyy a'}}
+        <br>
+        <b>เวลา : </b>{{dataUserRequest.data.Time.toDate() | date:'h:mm:ss a'}}
+        <hr>
+      </div>
+      <div class="row-button">
+        <button mat-raised-button color="primary" (click)="openDialog('accept',dataUserRequest.id)">
+          <mat-icon>done_all</mat-icon>
+          ยอมรับ
+        </button>
+        &nbsp;
+        <button mat-raised-button color="warn" (click)="openDialog('reject',dataUserRequest.id)">
+          <mat-icon>clear</mat-icon>
+          ปฏิเสธ
+        </button>
+      </div>
+    </mat-card>
+    </div>
+  </div>
+
+
+
+
+
+ <!-- <mat-tab-group>
+  <mat-tab label="First">
+    <div *ngFor="let dataUserRequest of dataUserRequests | async">
+      <mat-card>
+        <div *ngIf="dataUserRequest.data.Request == 'ยกเลิกการเก็บข้อมูลส่วนบุคคล'; else hide">
+          {{dataUserRequest.id}}
+          {{dataUserRequest.data.Uid}}
+          {{dataUserRequest.data.Request}}
+          {{dataUserRequest.data.Time.toDate() | date:'dd/MM/yyyy h:mm:ss a'}}
+          <button (click)="openDialog('accept',dataUserRequest.id)">ยอมรับ</button>
+          <button (click)="openDialog('reject',dataUserRequest.id)">ปฏิเสธ</button>
+        </div>
+      </mat-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Second">
+    <div *ngFor="let dataUserRequest of dataUserRequests | async">
+      <mat-card>
+        <div *ngIf="dataUserRequest.data.Request == 'ยกเลิกการใช้ข้อมูลส่วนบุคคล'">
+          {{dataUserRequest.id}}
+          {{dataUserRequest.data.Uid}}
+          {{dataUserRequest.data.Request}}
+          {{dataUserRequest.data.Time.toDate() | date:'dd/MM/yyyy h:mm:ss a'}}
+          <button (click)="openDialog('accept',dataUserRequest.id)">ยอมรับ</button>
+          <button (click)="openDialog('reject',dataUserRequest.id)">ปฏิเสธ</button>
+        </div>
+      </mat-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Third"> 
+    <div *ngFor="let dataUserRequest of dataUserRequests | async">
+      <mat-card>
+        <div *ngIf="dataUserRequest.data.Request == 'ยกเลิกการเปิดเผยข้อมูลส่วนบุคคล'">
+          {{dataUserRequest.id}}
+          {{dataUserRequest.data.Uid}}
+          {{dataUserRequest.data.Request}}
+          {{dataUserRequest.data.Time.toDate() | date:'dd/MM/yyyy h:mm:ss a'}}
+          <button (click)="openDialog('accept',dataUserRequest.id)">ยอมรับ</button>
+          <button (click)="openDialog('reject',dataUserRequest.id)">ปฏิเสธ</button>
+        </div>
+      </mat-card>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+</div> -->

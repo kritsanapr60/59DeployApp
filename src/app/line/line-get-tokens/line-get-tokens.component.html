@@ -1,0 +1,83 @@
+<div class="container-sticky">
+  <!-- NavBar -->
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <div fxFlex fxLayout="row" fxLayoutAlign="flex-center">
+        <div fxFlex fxLayout="row" fxLayoutGap="20px">
+          <span>MY PROFILE</span>
+        </div>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+        <div fxLayout="row" fxLayoutGap="20px">
+          <button mat-icon-button (click)="sideBarToggler()">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-drawer-container style="width: 100%; height: 100%;">
+    <mat-drawer mode="over" position="end" [opened]="sideBarOpen">
+      <mat-nav-list>
+        <div class="profile-card">
+          <div class="header">
+            <h2>{{userData? userData['displayName']: ''}}</h2>
+            <h4>{{userData? userData['email']: ''}}</h4>
+          </div>
+          <img src="{{userData? userData['pictureUrl']: ''}}" alt="image not found">
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h2 matSubheader>Pages</h2>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/information">ขอสำเนาข้อมูลส่วนบุคคล</a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/viewForm">ฟอร์มทั้งหมด</a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/userCancel">ขอยกเลิกข้อมูลส่วนบุคคล</a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/personalInformation">ข้อมูลส่วนตัว</a>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/UserImportData">ข้อมูลระบบ</a>
+        <mat-divider></mat-divider>
+
+        <mat-divider></mat-divider>
+
+        <h2 matSubheader>Option</h2>
+        <button mat-menu-item (click)="logOut()">
+          <mat-icon>exit_to_app</mat-icon>
+          Log out
+        </button>
+      </mat-nav-list>
+
+    </mat-drawer>
+    <br>
+    <mat-drawer-content>
+      <router-outlet> </router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
+
+  <div mat-tab-nav-bar [backgroundColor]="'primary'" fxLayout="row" class="mat-tab-nav-bar">
+    <div mat-tab-link routerLink="/" fxFlex="32" fxLayout="column" fxLayoutAlign="center center">
+      <div>
+        <span class="material-icons">home</span>
+      </div>
+      <div>
+        <span>หน้าหลัก</span>
+      </div>
+    </div>
+    <div mat-tab-link routerLink="/information" fxFlex="32" fxLayout="column" fxLayoutAlign="center center">
+      <div>
+        <span class="material-icons">info</span>
+      </div>
+      <div>
+        <span>ข้อมูลส่วนตัว</span>
+      </div>
+    </div>
+    <div mat-tab-link routerLink="/userCancel" fxFlex="32" fxLayout="column" fxLayoutAlign="center center">
+      <div>
+        <span class="material-icons">content_paste</span>
+      </div>
+      <div>
+        <span>การให้ข้อมูล</span>
+      </div>
+    </div>
+  </div>
+</div>

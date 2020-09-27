@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // This rule allows anyone on the internet to view, edit, and delete
+    // all data in your Firestore database. It is useful for getting
+    // started, but it is configured to expire after 30 days because it
+    // leaves your app open to attackers. At that time, all client
+    // requests to your Firestore database will be denied.
+    //
+    // Make sure to write security rules for your app before that time, or else
+    // your app will lose access to your Firestore database
+    // match /{document=**} {
+    //   allow read, write: if request.time < timestamp.date(2020, 9, 2);
+    // }
+    match /AdminList/{docId} {
+      allow read, write: if true;
+    }
+    match /CancelsInformation/{docId} {
+      allow read, write: if true;
+    }
+    match /FillOutForm/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /FormImportData/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /ImageFlexMessage/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /FlexTemplete/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /LineUser/{docId} {
+      allow read, write: if true;
+      // allow read: if request.auth != null;
+      // allow write: if request.auth.token == true;
+    }
+    match /ReqInformation/{docId} {
+      allow read, write: if true;
+    }
+    match /UserForm/{document=**} {
+      allow read, write: if true;
+    }
+    match /consent/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /editor/{docId} {
+      allow read, write: if request.auth != null;
+    }
+    match /form/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /reqPersonalInformation/{document=**} {
+      allow read, write: if true;
+    }
+    match /users/{docId} {
+      allow read, write: if true;
+    }
+    match /AdminTemplate/{document=**} {
+      allow read, write: if true;
+    }
+    match /adminContent/{filename} {
+      allow read, write: if request.auth != null && request.auth.uid == "some-uid";
+    }
+    match /premiumContent/{filename} {
+      allow read, write: if request.auth.token.premiumAccount == true;
+    }
+  }
+}

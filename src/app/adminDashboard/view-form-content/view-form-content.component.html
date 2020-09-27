@@ -1,0 +1,33 @@
+<!-- <section style="margin: 20px 10px 10px 10px;" class="container">
+  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="32px" fxLayoutAlign="flex-start">
+    <ng-container class="cardList" *ngFor="let Content of formContent | async">
+      <mat-card fxFlex="0 1 calc(25% - 32px)" fxFlex.lt-md="0 1 calc(50% - 32px)" fxFlex.lt-sm="100%">
+        <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px">
+          <div class="text-card-title">
+            <h2>{{Content.data.Title}}</h2>
+          </div>
+          <div>
+            <img mat-card-image src="{{Content.data.url}}" alt="b8c97f0879b9c071dc6d5ccda5ee44d4.png" border="0">
+          </div>
+          <div>
+            <p>
+              Date :
+              {{ (Content.data.Date?Content.data.Date:this.ngOnInit()).toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+            </p>
+          </div>
+        </div>
+        <mat-card-actions class="card --footer"  fxFlexAlign="end">
+          <button class="button --edit" type="button" mat-raised-button color="primary" [routerLink]="['/createContent', {docID: Content.id}]">
+            <mat-icon>edit</mat-icon>
+            แก้ไข
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
+</section>
+<button class="extended-fab-button" mat-fab color="primary" [routerLink]="['/createContent']">
+  <mat-icon>assignment</mat-icon>
+  <span class="extended-fab-button__text">Create Content</span>
+</button> -->
+<app-admin-template [ads]="ads"> </app-admin-template>

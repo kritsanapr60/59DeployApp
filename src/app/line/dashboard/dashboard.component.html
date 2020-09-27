@@ -1,0 +1,26 @@
+<section style="margin: 20px 10px 10px 10px;">
+  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="32px" fxLayoutAlign="flex-start">
+    <ng-container class="cardList" *ngFor="let userForm of userForms | async">
+      <mat-card fxFlex="0 1 calc(25% - 32px)" fxFlex.lt-md="0 1 calc(50% - 32px)" fxFlex.lt-sm="100%">
+        <mat-card-title class="text-card-title">{{userForm.data.title}}</mat-card-title>
+        <div fxLayout="row">
+          <div fxFlex="80">
+            <mat-card-subtitle class="text-card-subtitle">{{userForm.data.description}}</mat-card-subtitle>
+            <p>
+              กรอกข้อมูลเมื่อ: {{ userForm.data.Date.toDate() | date:'dd/MM/yyyy h:mm:ss a' }}
+          </p>
+          </div>
+          <div fxFlex="20" fxLayoutAlign="space-around center">
+            <img mat-card-image src="https://www.img.in.th/images/b8c97f0879b9c071dc6d5ccda5ee44d4.png" alt="b8c97f0879b9c071dc6d5ccda5ee44d4.png" border="0" >
+          </div>
+        </div>
+        <mat-card-actions>
+          <button type="button" mat-raised-button color="primary" [routerLink]="['/readConsent', {option: userUID,docID: userForm.id}]">
+            <mat-icon>edit</mat-icon>
+            แก้ไข
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
+</section>

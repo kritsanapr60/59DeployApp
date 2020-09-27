@@ -1,0 +1,49 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+.center {
+  text-align: center;
+}
+
+.mat-grid-tile .mat-figure {
+  display: block !important; /* or whichever you need */
+}
+
+.extended-fab-button {
+  width: unset;
+  padding: 0 26px;
+  border-radius: 29px;
+  float: right;
+  position: -webkit-sticky;
+  position: sticky;
+
+  top: auto !important;
+  right: 20px !important;
+  bottom: 10px !important;
+  left: auto !important;
+  position: fixed !important;
+}
+
+// .cdk-overlay-pane.my-dialog {
+//   position: relative!important;
+// }
+.close.mat-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  line-height: 14px;
+  min-width: auto;
+}
+
+@media screen and (min-width: 1030px) {
+  .custom-modalbox {
+    mat-dialog-container {
+      margin: 50px !important;
+      background-color: #849ebf !important;
+    }
+  }
+}
+.custom-modalbox {
+  mat-dialog-container {
+    background-color: #849ebf !important;
+  }
+}

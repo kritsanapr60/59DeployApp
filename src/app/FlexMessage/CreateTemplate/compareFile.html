@@ -1,0 +1,889 @@
+<div fxLayout="column">
+  <!-- herder -->
+  <div fxLayout="row">
+    <div fxLayoutAlign="start">
+      <h1>
+        Flex Message
+      </h1>
+    </div>
+  </div>
+  <mat-grid-list cols="3" rowHeight="1:1">
+    <!-- render -->
+    <mat-grid-tile style='background: lightskyblue;' class="mat-grad-1">
+      <div *ngFor="let d of data| async">
+        <div *ngIf="d.Name === 'carousel'">
+          <div *ngFor="let child of d.Children">
+            <mat-card class="render-card">
+              <!-- ++++{{child| json}} -->
+              <div *ngFor="let bubbleChild of child.Children">
+                <mat-card-header *ngIf="bubbleChild.Name === 'header'">
+                  header
+                  <div *ngFor="let headerChild of bubbleChild.Children">
+                  </div>
+                </mat-card-header>
+                <div *ngIf="bubbleChild.Name === 'hero'">
+                  hero
+                  <div *ngFor="let heroChild of bubbleChild.Children">
+                    <div *ngIf="heroChild.Type === 'image'">
+                      <img src="{{heroChild.Value}}" alt="Image" width="100" height="100">
+                    </div>
+                  </div>
+                </div>
+                <mat-card-content *ngIf="bubbleChild.Name === 'body'">
+                  body
+                  <div *ngFor="let bodyChild of bubbleChild.Children">
+                    <div fxFill fxLayout="{{bodyChild.layout?bodyChild.layout:'column'}}" *ngIf="bodyChild.Type === 'box'">
+                      <div fxFlex="{{verticalBoxChildren.flex?verticalBoxChildren.flex:1}} 1 0"
+                        *ngFor="let verticalBoxChildren of bodyChild.Children">
+
+                        <div [ngSwitch]="verticalBoxChildren.Name">
+                          <div *ngSwitchCase="'box'">
+                            box
+                          </div>
+                          <div *ngSwitchCase="'text'">
+                            {{verticalBoxChildren.Value}}
+                          </div>
+                          <div *ngSwitchCase="'image'">
+                            <img src="{{verticalBoxChildren.Value}}" alt="Image" width="100" height="100">
+                          </div>
+                          <div *ngSwitchCase="'button'">
+                            <button mat-raised-button color="accent">Action</button>
+                          </div>
+                          <div *ngSwitchCase="'filler'">
+                            **** {{verticalBoxChildren.Name}}
+                          </div>
+                          <div *ngSwitchCase="'spacer'">
+                            **** {{verticalBoxChildren.Name}}
+                          </div>
+                          <div *ngSwitchCase="'separator'">
+                            **** {{verticalBoxChildren.Name}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-footer *ngIf="bubbleChild.Name === 'footer'">
+                  footer
+                  <div *ngFor="let footerChild of bubbleChild.Children">
+                  </div>
+                </mat-card-footer>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <!-- {{data | async | json}} -->
+    </mat-grid-tile>
+    <!-- tree -->
+    <mat-grid-tile style='background: rgb(46, 43, 43);' class="mat-grad-2">
+      <div style='background: rgb(190, 190, 190);' fxLayout="row">
+        <app-add-node (addedNode)="addNode($event)" [isTop]="true" class="button-appen-node"></app-add-node>
+      </div>
+      <div>
+        <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl"
+          class="example-tree mat-tree-position" style='background: rgb(46, 43, 43);'>
+          <!-- Without Children -->
+          <mat-tree-node *matTreeNodeDef="let node" [ngClass]="{ 'background-highlight': activeNode === node }">
+            <!-- [ngClass]="{ 'background-highlight': activeNode === node }" -->
+            <li class="mat-tree-node" (click)="selectNode(node)">
+              <button mat-icon-button disabled></button>
+              <div class="flex-btn">
+                <div class="name">
+                  <span class="txtColor">{{node.Name}} &nbsp; &nbsp;</span>
+                </div>
+                <div class="child-btn">
+                  <app-add-node class="add-btn" (addedNode)="addChildNode($event)" [isTop]="false" [currentNode]="node">
+                  </app-add-node>
+                  &nbsp;
+                  <app-delete-node (deletedNode)="deleteNode($event)" [currentNode]="node"></app-delete-node>
+                </div>
+              </div>
+            </li>
+          </mat-tree-node>
+
+          <!-- With Children -->
+          <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNestedChild">
+            <li>
+              <div class="mat-tree-node" (click)="selectNode(node)"
+                [ngClass]="{ 'background-highlight': activeNode === node }" fxLayout="row">
+                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.Name" class="txtColor">
+                  <mat-icon class="mat-icon-rtl-mirror">
+                    {{nestedTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </button>
+                <span *ngIf="node.Type!='box'" class="txtColor">{{node.Name}} &nbsp; &nbsp;</span>
+                <span *ngIf="node.Type=='box'"
+                  class="txtColor">{{node.layout=='row'?'horizontal box':(node.layout=='baseline'?'baseline box':'vertical box')}}
+                  &nbsp; &nbsp;</span>
+
+                <app-add-node (addedNode)="addChildNode($event)" [isTop]="false" [currentNode]="node"></app-add-node>
+                &nbsp;
+                <app-delete-node (deletedNode)="deleteNode($event)" [currentNode]="node"></app-delete-node>
+              </div>
+              <ul [class.example-tree-invisible]="!nestedTreeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+              </ul>
+            </li>
+          </mat-nested-tree-node>
+        </mat-tree>
+      </div>
+    </mat-grid-tile>
+    <!-- chang value attribute -->
+    <mat-grid-tile style='background: lightslategrey; overflow:auto;' class="mat-grad-3">
+      <div *ngIf="activeNode">
+        <div *ngIf="activeNode.Name === 'carousel'">
+          <mat-card class="child-card">
+            <mat-card-title>
+              {{activeNode.Name}}
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">type</div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="type" readonly>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div *ngIf="activeNode.Name === 'bubble'">
+          <mat-card class="child-card">
+            <mat-card-title>
+              {{activeNode.Name}}
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">type</div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Bubble" readonly>
+                  </mat-form-field>
+                </div>
+
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  direction
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select direction">
+                      <mat-option *ngFor="let direction of directionOption" [value]="direction.value">
+                        {{ direction.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  size
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select size">
+                      <mat-option *ngFor="let size of sizeOption" [value]="size.value">
+                        {{ size.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="child-card">
+            <mat-card-title>
+              Action
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  type
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select type">
+                      <mat-option *ngFor="let type of typeOption" [value]="type.value">
+                        {{ type.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div
+          *ngIf="activeNode.Name === 'header' || activeNode.Name === 'hero' || activeNode.Name === 'body' || activeNode.Name === 'footer'">
+          <mat-card class="child-card">
+            <mat-card-title>
+              Style {{ activeNode.Name }}
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">backgroundColor</div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter background color">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  separator
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select separator">
+                      <mat-option *ngFor="let sep of separatorOptions" [value]="sep.value">
+                        {{ sep.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">separatorColor</div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter separator color">
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div *ngIf="activeNode.Name === 'vertical box'">
+          <mat-card class="child-card">
+            <mat-card-title>
+              Box
+            </mat-card-title>
+            <mat-card-content>
+              <form [formGroup]="boxForm">
+                <div class="mat-card-box">
+                  <div class="paraph">type</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput readonly formControlName="type">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label>type</mat-label>
+                    <input matInput placeholder="Input type">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+
+                <div class="mat-card-box">
+                  <div class="paraph">
+                    layout
+                  </div>
+                  <div class="item">
+                    <mat-form-field appearance="fill" class="mat-full-form">
+                      <mat-select formControlName="layout" placeholder="Select Layout" [(ngModel)]="activeNode.layout">
+                        <mat-option *ngFor="let layout of layoutOptions" [value]="layout.value">
+                          {{ layout.valueView }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="mat-card-box">
+                  <div class="paraph">
+                    position
+                  </div>
+                  <div class="item">
+                    <mat-form-field appearance="fill" class="mat-full-form">
+                      <mat-select placeholder="Select Position" formControlName="position"
+                        [(ngModel)]="activeNode.position">
+                        <mat-option *ngFor="let food of positionOptions" [value]="food.value">
+                          {{ food.valueView }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="mat-card-box">
+                  <div class="paraph">flex</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter flex" formControlName="flex" [(ngModel)]="activeNode.flex">
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">spacing</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter spacing" formControlName="spacing"
+                        [(ngModel)]="activeNode.spacing">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">margin</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter margin" formControlName="margin"
+                        [(ngModel)]="activeNode.margin">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="Enter margin">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">width</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter width" formControlName="width" [(ngModel)]="activeNode.width">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="Enter width">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">height</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter height" formControlName="height"
+                        [(ngModel)]="activeNode.height">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="Enter height">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">
+                    backgroundColor
+                  </div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter background color" formControlName="backgroundColor"
+                        [(ngModel)]="activeNode.backgroundColor">
+                      <mat-hint>#RRGGBB or #RRGGBBAA</mat-hint>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="BackgroundColor type">
+                  </mat-form-field> -->
+                  </div>
+
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">borderWidth</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter borderWidth" formControlName="borderWidth"
+                        [(ngModel)]="activeNode.borderWidth">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="Enter borderWidth">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">borderColor</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter border color" formControlName="borderColor"
+                        [(ngModel)]="activeNode.borderColor">
+                      <mat-hint>#RRGGBB or #RRGGBBAA</mat-hint>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label>type</mat-label>
+                    <input matInput placeholder="Enter borderColor">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+                <div class="mat-card-box">
+                  <div class="paraph">cornerRadius</div>
+                  <div class="item">
+                    <mat-form-field appearance="outline" class="mat-full-form">
+                      <!-- <mat-label>type</mat-label> -->
+                      <input matInput placeholder="Enter corner radius" formControlName="cornerRadius"
+                        [(ngModel)]="activeNode.cornerRadius">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="mat-full-form">
+                    <mat-label></mat-label>
+                    <input matInput placeholder="Enter cornerRadius">
+                  </mat-form-field> -->
+                  </div>
+                </div>
+              </form>
+
+              <p>FormValue:{{boxForm.value|json}}</p>
+
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="child-card">
+            <mat-card-title>
+              Offset
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  offsetTop
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Offset Top">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  offsetBottom
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Offset Bottom">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  offsetStart
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Offset Start">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  offsetEnd
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Offset End">
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="child-card">
+            <mat-card-title>
+              Padding
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  paddingAll
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Padding all">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  paddingTop
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Padding top">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  paddingBottom
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Padding Bottom">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  paddingStart
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Padding start">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  paddingEnd
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter Padding start">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- <p>paddingTop</p> -->
+              <!-- <p>paddingBottom</p> -->
+              <!-- <p>paddingStart</p> -->
+              <!-- <p>paddingEnd</p> -->
+
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="child-card">
+            <mat-card-title>
+              Action
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  type
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select type">
+                      <mat-option *ngFor="let food of typeOption" [value]="food.value">
+                        {{ food.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div *ngIf="activeNode.Name === 'text' || activeNode.Name === 'image' ">
+          <mat-card class="child-card">
+            <mat-card-title>
+              Box
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  type
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter type" readonly>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  flex
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input type="number" matInput placeholder="Enter flex" [(ngModel)]="activeNode.flex">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  margin
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select margin">
+                      <mat-option *ngFor="let margin of marginOptions" [value]="margin.value">
+                        {{ margin.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  text
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input type="text" matInput placeholder="Enter text" value="place">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  size
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select size">
+                      <mat-option *ngFor="let size of sizeOption" [value]="size.value">
+                        {{ size.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  color
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input type="text" matInput placeholder="#aaaaaa">
+                  </mat-form-field>
+                  <mat-hint>#RRGGBB or #RRGGBBAA</mat-hint>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>weight</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select weight">
+                      <mat-option *ngFor="let weight of weightOption" [value]="weight.value">
+                        {{ weight.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>style</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select style">
+                      <mat-option *ngFor="let style of styleOption" [value]="style.value">
+                        {{ style.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>decoration</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select decoration">
+                      <mat-option *ngFor="let decorat of decorationOption" [value]="decorat.value">
+                        {{ decorat.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>position</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select position">
+                      <mat-option *ngFor="let position of positionOptions" [value]="position.value">
+                        {{ position.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>align</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select align">
+                      <mat-option *ngFor="let align of alignOption" [value]="align.value">
+                        {{ align.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>gravity</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select gravity">
+                      <mat-option *ngFor="let gravity of gravityOption" [value]="gravity.value">
+                        {{ gravity.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>wrap</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select wrap">
+                      <mat-option *ngFor="let wrap of wrapOptions" [value]="wrap.value">
+                        {{ wrap.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>maxLines</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input type="number" matInput placeholder="Enter number maxLines">
+                  </mat-form-field>
+                  <mat-hint>`maxLines` is not supported in simulator</mat-hint>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="child-card">
+            <mat-card-title>
+              Offset
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>offsetTop</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter offsetTop">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>offsetBottom</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter offsetBottom">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>offsetStart</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter offsetStart">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>offsetEnd</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="outline" class="mat-full-form">
+                    <!-- <mat-label>type</mat-label> -->
+                    <input matInput placeholder="Enter offsetEnd">
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="child-card">
+            <mat-card-title>
+              Action
+            </mat-card-title>
+            <mat-card-content>
+              <div class="mat-card-box">
+                <div class="paraph">
+                  <p>type</p>
+                </div>
+                <div class="item">
+                  <mat-form-field appearance="fill" class="mat-full-form">
+                    <mat-select placeholder="Select type">
+                      <mat-option *ngFor="let type of typeOption" [value]="type.value">
+                        {{ type.valueView }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

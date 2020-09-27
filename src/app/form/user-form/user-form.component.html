@@ -1,0 +1,147 @@
+<div class="form-group" style="margin-bottom: 0px !important; padding: 30px 30px 5px 30px;">
+  <div id="example-form" *ngIf="model" class="container marginT60 marginB30">
+    <mat-card style="max-width: 90%; margin: auto;">
+      <div class="row" style="padding: 30px;">
+        <div class="col-12">
+          <h2>{{title}}</h2>
+        </div>
+        <div class="col-12">
+          <h5>{{description}}</h5>
+        </div>
+        <div *ngIf="success" class="col-4">
+          <div class="form-group">
+            <mat-label>Your form has been submitted.</mat-label>
+          </div>
+        </div>
+        <form [formGroup]="myForm">
+          <div *ngIf="!success" class="col-12">
+            <div *ngFor="let item of formAttributes" class="form-group">
+              <div *ngIf="item.type == 'text'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="text" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}"
+                    style="width: 100% !important;" />
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="item.type == 'email'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="email" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'phone'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="text" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'number'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="number" id="{{ item.name }}"
+                    min="{{ item.min }}" max="{{ item.max }}" formControlName="{{item.label}}"
+                    placeholder="{{ item.placeholder }}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'date'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="date" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'datetime-local'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="datetime-local" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'duration'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="datetime-local" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'time'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <input matInput readonly="{{item.readOnly? true: false}}" type="time" id="{{ item.name }}"
+                    placeholder="{{ item.placeholder }}" formControlName="{{item.label}}" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'textarea'">
+                <mat-form-field style="width: 100%;">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+                  <textarea matInput id="{{ item.name }}" placeholder="{{ item.placeholder }}"
+                    formControlName="{{item.label}}" value="{{ fieldConsent[item.label] ? '' : item.value }}"
+                    (input)="item.value=$event.target.value"></textarea>
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'paragraph'">
+                <p class="form-text">{{ item.placeholder }}</p>
+              </div>
+              <div *ngIf="item.type == 'autocomplete'">
+
+                <mat-form-field appearance="fill">
+                  <mat-label>{{ item.label }}</mat-label>
+                  <select matNativeControl required="item.required" style="width: 100%;"
+                    formControlName="{{item.label}}">
+                    <option *ngFor="let v of item.values" [value]="v.value">{{
+                  v.label
+                }}</option>
+                  </select>
+                </mat-form-field>
+              </div>
+              <div *ngIf="item.type == 'checkbox'">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+
+                <mat-selection-list style="width: 100%;" formControlName="{{item.label}}">
+                  <mat-list-option *ngFor="let v of item.values">
+                    {{ v.label }}
+                  </mat-list-option>
+                </mat-selection-list>
+              </div>
+              <div *ngIf="item.type == 'radio'">
+                <mat-label style="text-align: left;"><b>{{ item.label }}</b></mat-label>
+                <mat-label *ngIf="item.required" class="text-danger">*</mat-label>
+
+                <mat-label class="cust-check-bx">
+                  <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                    [(ngModel)]="item.value" formControlName="{{item.label}}">
+                    <mat-radio-button class="example-radio-button" *ngFor="let v of item.values" [value]="v.label">
+                      {{ v.label }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </mat-label>
+
+              </div>
+              <div *ngIf="item.type == 'button'">
+                <button mat-button color="primary" (click)="submit()" id="{{ item.name }}" type="{{ item.subtype }}">
+                  {{ item.label }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</div>
