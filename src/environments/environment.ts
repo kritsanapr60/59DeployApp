@@ -21,7 +21,7 @@ export const environment = {
     appId: '1:737851649336:web:8456a2de3d168ac62b25cd',
     measurementId: 'G-H2QLLHPJ7Q'
   },
-  liffId: '1654905366-6Aq3rX47'
+  liffId: '1654472250-paWlbKYz'
 };
 
 /*
