@@ -14,8 +14,6 @@
             <br>
             TIME : {{data.Time.toDate() | date:'dd/MM/yyyy'}}
             <div fxLayout="row" fxLayoutAlign="end center">
-              <!-- <button mat-raised-button color="primary" [routerLink]="['/Accept', {id: data.id}]">ยืนยัน</button>
-              <button mat-raised-button color="warn" [routerLink]="['/Reject', {id: data.id}]">ปฏิเสธ</button> -->
             <button mat-raised-button color="primary" [routerLink]="['/Accept', {id: data.id}]">ยืนยัน</button>
               <button mat-raised-button color="warn" (click)="openDialog('reject',data.id)">ปฏิเสธ</button>
             </div>
